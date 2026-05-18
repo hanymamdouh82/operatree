@@ -7,6 +7,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	pDir string
+)
+
 var rootCmd = &cobra.Command{
 	Use:   "operatree",
 	Short: "OperaTree project operating system",

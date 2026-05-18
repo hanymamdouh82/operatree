@@ -1,16 +1,18 @@
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanymamdouh82/operatree/internal/project"
 	"github.com/spf13/cobra"
 )
 
 var (
-	rootDir string
+	bDir string
 )
 
 func init() {
-	bootstrapCmd.Flags().StringVarP(&rootDir, "dest", "d", "/mnt/extra/onfly", "project root directory")
+	bootstrapCmd.Flags().StringVarP(&bDir, "dest", "d", "/mnt/extra/onfly", "project root directory")
 	rootCmd.AddCommand(bootstrapCmd)
 }
 
@@ -24,5 +26,10 @@ var bootstrapCmd = &cobra.Command{
 
 func bootstrap(cmd *cobra.Command, args []string) {
 	pn := args[0]
-	project.Bootstrap(rootDir, pn)
+	p, err := project.Bootstrap(bDir, pn)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	p.Describe()
 }

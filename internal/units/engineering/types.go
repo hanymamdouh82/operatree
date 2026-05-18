@@ -5,6 +5,7 @@ import (
 	"path"
 
 	"github.com/hanymamdouh82/operatree/internal/filesystem"
+	"github.com/hanymamdouh82/operatree/internal/types"
 )
 
 const (
@@ -24,13 +25,13 @@ var (
 )
 
 type UnitEngineering struct {
-	Type       string `yaml:"type"`
-	Name       string `yaml:"name"`
-	ParentPath string `yaml:"parentPath"`
-	UnitPath   string `yaml:"unitPath"`
+	Type       types.UnitType `yaml:"type"`
+	Name       string         `yaml:"name"`
+	ParentPath string         `yaml:"parentPath"`
+	UnitPath   string         `yaml:"unitPath"`
 }
 
-func (u *UnitEngineering) SetUnitType(t string) {
+func (u *UnitEngineering) SetUnitType(t types.UnitType) {
 	u.Type = t
 }
 
@@ -49,6 +50,10 @@ func (u *UnitEngineering) SetUnitDir() {
 
 func (u UnitEngineering) UnitDir() string {
 	return path.Join(u.ParentPath, UNIT_NAME)
+}
+
+func (u *UnitEngineering) UnitType() types.UnitType {
+	return u.Type
 }
 
 // Cannot use *Event since it will not implement the interface

@@ -1,12 +1,15 @@
 package event
 
-import "fmt"
+func (u *UnitEvents) New(name string) (Event, error) {
+	e := Event{
+		Type: "event",
+		Name: name,
+	}
 
-// Creates new event in 01_EVENTS dir and creates sub dirs for event
-func New(name string, unit UnitEvents) {
-	// create event dir
-	// create subdirs
+	err := save(e, u)
+	if err != nil {
+		return e, err
+	}
 
-	pth := unit.UnitDir()
-	fmt.Printf("will create into: %s\n", pth)
+	return e, nil
 }

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/hanymamdouh82/operatree/internal/filesystem"
+	"github.com/hanymamdouh82/operatree/internal/types"
 	"gopkg.in/yaml.v3"
 )
 
@@ -14,13 +15,13 @@ const (
 )
 
 type UnitEvents struct {
-	Type       string `yaml:"type"`
-	Name       string `yaml:"name"`
-	ParentPath string `yaml:"parentPath"`
-	UnitPath   string `yaml:"unitPath"`
+	Type       types.UnitType `yaml:"type"`
+	Name       string         `yaml:"name"`
+	ParentPath string         `yaml:"parentPath"`
+	UnitPath   string         `yaml:"unitPath"`
 }
 
-func (u *UnitEvents) SetUnitType(t string) {
+func (u *UnitEvents) SetUnitType(t types.UnitType) {
 	u.Type = t
 }
 
@@ -42,14 +43,8 @@ func (u UnitEvents) UnitDir() string {
 	return path.Join(u.ParentPath, UNIT_NAME)
 }
 
-type Event struct {
-	Type         string   `yaml:"type"`
-	Name         string   `yaml:"name"`
-	Date         string   `yaml:"time"`
-	Location     string   `yaml:"location"`
-	Participants []string `yaml:"participants"`
-	Tags         []string `yaml:"tags"`
-	Notes        string   `yaml:"notes"`
+func (u *UnitEvents) UnitType() types.UnitType {
+	return u.Type
 }
 
 // Cannot use *Event since it will not implement the interface

@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/hanymamdouh82/operatree/internal/filesystem"
+	"github.com/hanymamdouh82/operatree/internal/types"
 	"github.com/hanymamdouh82/operatree/internal/units/admin"
 	"github.com/hanymamdouh82/operatree/internal/units/archive"
 	"github.com/hanymamdouh82/operatree/internal/units/deliverables"
@@ -35,13 +36,13 @@ func Bootstrap(pth string, name string) (Project, error) {
 
 	// Bootstrap units
 	// To-Do: units can be parsed from CLI or template based on user type or project type
-	p.AddUnit(&admin.UnitAdmin{}, UnitAdmin)
-	p.AddUnit(&event.UnitEvents{}, UnitEvents)
-	p.AddUnit(&legal.UnitLegal{}, UnitLegal)
-	p.AddUnit(&engineering.UnitEngineering{}, UnitEngineering)
-	p.AddUnit(&medialib.UnitMediaLib{}, UnitMediaLib)
-	p.AddUnit(&deliverables.UnitDeliverables{}, UnitDeliverables)
-	p.AddUnit(&archive.UnitArchive{}, UnitArchive)
+	p.AddUnit(&admin.UnitAdmin{}, types.UnitAdmin)
+	p.AddUnit(&event.UnitEvents{}, types.UnitEvents)
+	p.AddUnit(&legal.UnitLegal{}, types.UnitLegal)
+	p.AddUnit(&engineering.UnitEngineering{}, types.UnitEngineering)
+	p.AddUnit(&medialib.UnitMediaLib{}, types.UnitMediaLib)
+	p.AddUnit(&deliverables.UnitDeliverables{}, types.UnitDeliverables)
+	p.AddUnit(&archive.UnitArchive{}, types.UnitArchive)
 
 	// iterate and invoke every bootstrap function
 	// we collect bootstrapping results and we don't interrupt the process
