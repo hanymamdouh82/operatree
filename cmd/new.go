@@ -51,8 +51,8 @@ func newEvent(p *project.Project) error {
 	}
 
 	// if name flag is not provided, we open interactive CLI
+	var e event.Event
 	if entityName == "" {
-		var e event.Event
 		if e, err = u.NewInteractive(); err != nil {
 			return err
 		}
@@ -62,7 +62,12 @@ func newEvent(p *project.Project) error {
 	}
 
 	// create empty event using provided name flag only and default values
-	u.New(entityName)
+	e, err = u.New(entityName)
+	if err != nil {
+		return err
+	}
+	y, _ := yaml.Marshal(e)
+	fmt.Printf("%s\n", y)
 
 	return nil
 }

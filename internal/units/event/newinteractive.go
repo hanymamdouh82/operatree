@@ -2,6 +2,7 @@ package event
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/hanymamdouh82/operatree/internal/metadata"
@@ -77,6 +78,7 @@ func (u *UnitEvents) NewInteractive() (Event, error) {
 	e.Notes = notes
 
 	if err := save(e, u); err != nil {
+		log.Fatal(err)
 		return e, err
 	}
 
