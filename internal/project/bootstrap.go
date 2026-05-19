@@ -11,7 +11,7 @@ import (
 func Bootstrap(name string, bpth string) (Project, error) {
 
 	// To-Do: replace with map for different templates
-	np := dev(name, bpth)
+	np := tmpltDev(name, bpth)
 
 	// create project dir
 	if err := filesystem.CreateDir(np.ProjectDir()); err != nil {

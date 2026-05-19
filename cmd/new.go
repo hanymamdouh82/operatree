@@ -51,7 +51,7 @@ func newUnitEntity(cmd *cobra.Command, args []string) {
 func newEvent(p *project.Project) error {
 
 	i := slices.IndexFunc(p.Modules, func(m module.Module) bool {
-		return m.Type == "events"
+		return m.Type == module.ModuleEvents
 	})
 	m := p.Modules[i]
 
