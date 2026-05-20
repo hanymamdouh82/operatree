@@ -2,7 +2,6 @@ package project
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/hanymamdouh82/operatree/internal/subject"
 	"github.com/ktr0731/go-fuzzyfinder"
@@ -11,9 +10,10 @@ import (
 
 var (
 	subjectTypes []string = []string{
-		"EVENT",
-		"TOPIC",
-		"OBJECTIVE",
+		string(subject.SubjectEvent),
+		string(subject.SubjectTask),
+		string(subject.SubjectTopic),
+		string(subject.SubjectObjective),
 	}
 )
 
@@ -61,11 +61,7 @@ func FindSubjects(p *Project, st string, term string) (subject.Subject, error) {
 				return ""
 			}
 			s := db[i].Subject
-			return fmt.Sprintf(
-				"Name:     %s\nDate:     %s\nLocation: %s\nNotes:    %s\nTags:     %s",
-				s.Name, s.Date, s.Location, s.Notes,
-				strings.Join(s.Tags, ", "),
-			)
+			return formatPreview(s)
 		}),
 	)
 	if err != nil {
