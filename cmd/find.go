@@ -15,7 +15,7 @@ var findCmd = &cobra.Command{
 	Use:   "find",
 	Short: "Finds a subject in project",
 	Long:  "Fuzzy-Find a subject in a project",
-	Args:  cobra.MatchAll(cobra.MaximumNArgs(2), cobra.MinimumNArgs(1)),
+	Args:  cobra.MatchAll(cobra.MaximumNArgs(2)),
 	Run:   find,
 }
 
@@ -31,8 +31,11 @@ func find(cmd *cobra.Command, args []string) {
 	if len(args) == 2 {
 		t = args[0]
 		term = args[1]
-	} else {
+	} else if len(args) == 1 {
 		term = args[0]
+	} else {
+		t = ""
+		term = ""
 	}
 
 	s, err := project.FindSubjects(&p, t, term)

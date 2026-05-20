@@ -25,7 +25,11 @@ func FindSubjects(p *Project, st string, term string) (subject.Subject, error) {
 
 	var t subject.SubjectType
 	if len(types) != 0 {
-		t = subject.SubjectType(types[0])
+		if len(types) != len(subjectTypes) {
+			t = subject.SubjectType(types[0])
+		} else {
+			t = ""
+		}
 	}
 
 	db := BuildSearchDB(p)
@@ -54,7 +58,7 @@ func FindSubjects(p *Project, st string, term string) (subject.Subject, error) {
 			return fmt.Sprintf("%-120s  %s", display, db[i].SearchStr)
 		},
 		fuzzyfinder.WithQuery(term),
-		fuzzyfinder.WithHeader("Matching Subjects"),
+		fuzzyfinder.WithHeader(fmt.Sprintf("Matching %s", t)),
 		fuzzyfinder.WithPromptString("Search subjects for > "),
 		fuzzyfinder.WithPreviewWindow(func(i, w, h int) string {
 			if i == -1 {
