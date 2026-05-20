@@ -62,6 +62,7 @@ func newUnitEntity(cmd *cobra.Command, args []string) {
 
 // Adds new event to Events module
 func newEvent(p *project.Project) error {
+	ss := project.ListSubjects(p, "")
 
 	i := slices.IndexFunc(p.Modules, func(m module.Module) bool {
 		return m.Type == module.ModuleEvents
@@ -69,7 +70,7 @@ func newEvent(p *project.Project) error {
 	m := p.Modules[i]
 
 	// module abs path defines where subject will reside
-	s, err := subject.SubjectFactory(subject.SubjectEvent, m.AbsPath)
+	s, err := subject.SubjectFactory(subject.SubjectEvent, m.AbsPath, ss)
 	if err != nil {
 		return err
 	}
@@ -89,6 +90,7 @@ func newEvent(p *project.Project) error {
 
 // Adds new event to Project Management / Tasks module
 func newTask(p *project.Project) error {
+	ss := project.ListSubjects(p, "")
 
 	i := slices.IndexFunc(p.Modules, func(m module.Module) bool {
 		return m.Type == module.ModuleProjectManagement
@@ -102,7 +104,7 @@ func newTask(p *project.Project) error {
 	m := pmm.Modules[j]
 
 	// module abs path defines where subject will reside
-	s, err := subject.SubjectFactory(subject.SubjectTask, m.AbsPath)
+	s, err := subject.SubjectFactory(subject.SubjectTask, m.AbsPath, ss)
 	if err != nil {
 		return err
 	}
@@ -122,6 +124,7 @@ func newTask(p *project.Project) error {
 
 // Adds new topic to Research / Topics module
 func newTopic(p *project.Project) error {
+	ss := project.ListSubjects(p, "")
 
 	i := slices.IndexFunc(p.Modules, func(m module.Module) bool {
 		return m.Type == module.ModuleResearch
@@ -135,7 +138,7 @@ func newTopic(p *project.Project) error {
 	m := pmm.Modules[j]
 
 	// module abs path defines where subject will reside
-	s, err := subject.SubjectFactory(subject.SubjectTopic, m.AbsPath)
+	s, err := subject.SubjectFactory(subject.SubjectTopic, m.AbsPath, ss)
 	if err != nil {
 		return err
 	}
@@ -155,6 +158,7 @@ func newTopic(p *project.Project) error {
 
 // Adds new topic to Research / Objectives module
 func newObjective(p *project.Project) error {
+	ss := project.ListSubjects(p, "")
 
 	i := slices.IndexFunc(p.Modules, func(m module.Module) bool {
 		return m.Type == module.ModuleResearch
@@ -168,7 +172,7 @@ func newObjective(p *project.Project) error {
 	m := pmm.Modules[j]
 
 	// module abs path defines where subject will reside
-	s, err := subject.SubjectFactory(subject.SubjectObjective, m.AbsPath)
+	s, err := subject.SubjectFactory(subject.SubjectObjective, m.AbsPath, ss)
 	if err != nil {
 		return err
 	}

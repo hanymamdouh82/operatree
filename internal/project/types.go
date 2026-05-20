@@ -6,6 +6,7 @@ import (
 
 	"github.com/hanymamdouh82/operatree/internal/filesystem"
 	"github.com/hanymamdouh82/operatree/internal/module"
+	"github.com/hanymamdouh82/operatree/internal/subject"
 	"gopkg.in/yaml.v3"
 )
 
@@ -59,4 +60,11 @@ func (p *Project) WriteMetadata() error {
 	}
 
 	return nil
+}
+
+func (p *Project) Events() []subject.Subject {
+
+	ss := ListSubjects(p, subject.SubjectEvent)
+
+	return ss
 }

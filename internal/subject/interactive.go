@@ -3,45 +3,36 @@ package subject
 import (
 	"time"
 
+	"github.com/charmbracelet/huh"
 	"github.com/hanymamdouh82/operatree/internal/metadata"
-	"github.com/manifoldco/promptui"
 )
 
-func interactiveCLI(st SubjectType, s *Subject) error {
+func interactiveCLI(st SubjectType, s *Subject, ss []Subject) error {
 
-	// Standard props
-	prompt := promptui.Prompt{
-		Label: "Name",
-	}
-	name, err := prompt.Run()
-	if err != nil {
-		return err
-	}
+	var name, date, tags, notes string
 
-	// Date prompt
-	prompt = promptui.Prompt{
-		Label:   "Date",
-		Default: time.Now().Format("2006-01-02"),
-	}
-	date, err := prompt.Run()
-	if err != nil {
-		return err
-	}
+	// Standard fields — all types
+	err := huh.NewForm(
+		huh.NewGroup(
+			huh.NewInput().
+				Title("Name").
+				Value(&name),
 
-	// Tags prompt
-	prompt = promptui.Prompt{
-		Label: "Tags (comma-separated)",
-	}
-	tags, err := prompt.Run()
-	if err != nil {
-		return err
-	}
+			huh.NewInput().
+				Title("Date").
+				Value(&date).
+				Placeholder(time.Now().Format("2006-01-02")),
 
-	// Notes prompt
-	prompt = promptui.Prompt{
-		Label: "Notes",
-	}
-	notes, err := prompt.Run()
+			huh.NewInput().
+				Title("Tags").
+				Description("comma-separated").
+				Value(&tags),
+
+			huh.NewText().
+				Title("Notes").
+				Value(&notes),
+		),
+	).Run()
 	if err != nil {
 		return err
 	}
@@ -51,24 +42,22 @@ func interactiveCLI(st SubjectType, s *Subject) error {
 	s.Tags = metadata.ParseTags(tags)
 	s.Notes = notes
 
-	// Custom props based on type
-	// Event props
+	// Event-specific fields
 	if st == SubjectEvent {
+		var location, participants string
 
-		// Location prompt
-		prompt = promptui.Prompt{
-			Label: "Location",
-		}
-		location, err := prompt.Run()
-		if err != nil {
-			return err
-		}
+		err := huh.NewForm(
+			huh.NewGroup(
+				huh.NewInput().
+					Title("Location").
+					Value(&location),
 
-		// Participants prompt
-		prompt = promptui.Prompt{
-			Label: "Participants (comma-separated)",
-		}
-		participants, err := prompt.Run()
+				huh.NewInput().
+					Title("Participants").
+					Description("comma-separated").
+					Value(&participants),
+			),
+		).Run()
 		if err != nil {
 			return err
 		}
@@ -77,32 +66,45 @@ func interactiveCLI(st SubjectType, s *Subject) error {
 		s.Paricipants = metadata.ParseParticipants(participants)
 	}
 
-	// Task props
+	// Task-specific fields
 	if st == SubjectTask {
-		// Owner prompt
-		prompt = promptui.Prompt{
-			Label: "Owner",
+		var owner, status, relatedEvent string
+
+		// Build options for related events select
+		eventOptions := make([]huh.Option[string], len(ss))
+		for i, v := range ss {
+			eventOptions[i] = huh.NewOption(v.Name, v.Name)
 		}
-		owner, err := prompt.Run()
+
+		err := huh.NewForm(
+			huh.NewGroup(
+				huh.NewInput().
+					Title("Owner").
+					Value(&owner),
+
+				huh.NewSelect[string]().
+					Title("Status").
+					Options(
+						huh.NewOption("Planned", "planned"),
+						huh.NewOption("In Progress", "in-progress"),
+						huh.NewOption("Postponed", "postponed"),
+						huh.NewOption("Done", "done"),
+					).
+					Value(&status),
+
+				huh.NewSelect[string]().
+					Title("Related Subject").
+					Options(eventOptions...).
+					Value(&relatedEvent),
+			),
+		).Run()
 		if err != nil {
 			return err
 		}
-
-		// Status prompt
-		prompt = promptui.Prompt{
-			Label:   "Status [planned|postponed|done]",
-			Default: "planned",
-		}
-		status, err := prompt.Run()
-		if err != nil {
-			return err
-		}
-
-		// To-Do: add select for related objectives -> read from metadata and list here
-		// To-Do: add select for related events -> read from metadata and list here
 
 		s.Owner = metadata.ParsePersonName(owner)
 		s.Status = status
+		s.RelatedEvents = append(s.RelatedEvents, relatedEvent)
 	}
 
 	return nil

@@ -9,7 +9,8 @@ import (
 
 // creates new Subject of type event, add it to module subjects and updates metadata file
 // `ppth` is the parent dir abs path
-func SubjectFactory(st SubjectType, ppth string) (Subject, error) {
+// `pss` all project subjects. Use in interactive CLI to attach related
+func SubjectFactory(st SubjectType, ppth string, pss []Subject) (Subject, error) {
 
 	s := Subject{
 		Type:    st,
@@ -21,7 +22,7 @@ func SubjectFactory(st SubjectType, ppth string) (Subject, error) {
 	// CLI uses switch to decide propmpt fields
 	// This should run before any other function since rest of function depends on
 	// captured inputs from user
-	if err := interactiveCLI(st, &s); err != nil {
+	if err := interactiveCLI(st, &s, pss); err != nil {
 		return Subject{}, err
 	}
 
