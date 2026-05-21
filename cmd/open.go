@@ -4,22 +4,23 @@ import (
 	"log"
 
 	"github.com/hanymamdouh82/operatree/internal/project"
+	"github.com/hanymamdouh82/operatree/internal/runner"
 	"github.com/spf13/cobra"
 )
 
 func init() {
-	rootCmd.AddCommand(metadataCmd)
+	rootCmd.AddCommand(openSubjectCmd)
 }
 
-var metadataCmd = &cobra.Command{
-	Use:   "metadata",
-	Short: "Edits subject metadata",
-	Long:  "Opens editor to edit metadata",
+var openSubjectCmd = &cobra.Command{
+	Use:   "open",
+	Short: "Opens subject directory",
+	Long:  "Opens subject directory in default file manager",
 	Args:  cobra.MatchAll(cobra.MaximumNArgs(2)),
-	Run:   editMetadata,
+	Run:   openSubject,
 }
 
-func editMetadata(cmd *cobra.Command, args []string) {
+func openSubject(cmd *cobra.Command, args []string) {
 	p, err := project.Load(prjDir)
 	if err != nil {
 		log.Fatal(err)
@@ -42,13 +43,7 @@ func editMetadata(cmd *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
-	// call edit
-	if err := s.EditMetadata(); err != nil {
-		log.Fatal(err)
-	}
-
-	// Sync project metadata with subject metadata
-	if err := project.Sync(&p); err != nil {
+	if err := runner.OpenFileManager(s.DirName); err != nil {
 		log.Fatal(err)
 	}
 }

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"log"
+	"os"
 
 	"github.com/charmbracelet/huh"
 	"github.com/hanymamdouh82/operatree/internal/config"
@@ -30,6 +31,7 @@ func initConfig(cmd *cobra.Command, args []string) {
 
 	var standardDir string
 	var overwrite bool
+	var defaultFileManager string
 
 	if existing.StandardDir != "" {
 		// Config already exists — ask before overwriting
@@ -60,8 +62,26 @@ func initConfig(cmd *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
+	err = huh.NewForm(
+		huh.NewGroup(
+			huh.NewInput().
+				Title("Default file manager").
+				Description("Default binary name for file manager").
+				Placeholder("yazi").
+				Value(&defaultFileManager),
+		),
+	).Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// get default editor
+	editor := os.Getenv("EDITOR")
+
 	cfg := config.Config{
 		StandardDir: standardDir,
+		Editor:      editor,
+		FileManager: defaultFileManager,
 		Projects:    existing.Projects, // preserve tracked projects if overwriting
 		Daemon: config.Daemon{
 			Enabled:  false,

@@ -31,7 +31,21 @@ func EditFile(filePath string) error {
 	return nil
 }
 
-func OpenFileManager() error {
+func OpenFileManager(filePath string) error {
+
+	cfg, err := config.Load()
+	if err != nil {
+		return fmt.Errorf("cannot load operatree config")
+	}
+
+	fileManager := cfg.FileManager
+	if fileManager == "" {
+		return fmt.Errorf("cannot find default file manager")
+	}
+
+	if err := run(fileManager, []string{filePath}); err != nil {
+		return err
+	}
 
 	return nil
 }
