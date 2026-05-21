@@ -13,7 +13,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var silent bool
+var subjectName string
+var subjectDate string
+
 func init() {
+	newCmd.Flags().BoolVarP(&silent, "silent", "s", false, "omit interactive CLI")
+	newCmd.Flags().StringVar(&subjectName, "name", "", "subject name")
+	newCmd.Flags().StringVar(&subjectName, "date", "", "subject date")
 	rootCmd.AddCommand(newCmd)
 }
 
@@ -31,6 +38,11 @@ func newUnitEntity(cmd *cobra.Command, args []string) {
 	p, err := project.Load(prjDir)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	// silent requires --name at least to be provided
+	if silent && subjectName == "" {
+		log.Fatal(fmt.Errorf("silent mode requires --name flag"))
 	}
 
 	switch a {
@@ -68,8 +80,15 @@ func newEvent(p *project.Project) error {
 	})
 	m := p.Modules[i]
 
+	// Build initial subject that captures passed flags
+	is := subject.Subject{
+		Type: subject.SubjectEvent,
+		Name: subjectName,
+		Date: subjectDate,
+	}
+
 	// module abs path defines where subject will reside
-	s, err := subject.SubjectFactory(subject.SubjectEvent, m.AbsPath, ss)
+	s, err := subject.SubjectFactory(is, m.AbsPath, ss)
 	if err != nil {
 		return err
 	}
@@ -114,8 +133,15 @@ func newTask(p *project.Project) error {
 
 	m := pmm.Modules[j]
 
+	// Build initial subject that captures passed flags
+	is := subject.Subject{
+		Type: subject.SubjectTask,
+		Name: subjectName,
+		Date: subjectDate,
+	}
+
 	// module abs path defines where subject will reside
-	s, err := subject.SubjectFactory(subject.SubjectTask, m.AbsPath, ss)
+	s, err := subject.SubjectFactory(is, m.AbsPath, ss)
 	if err != nil {
 		return err
 	}
@@ -160,8 +186,15 @@ func newTopic(p *project.Project) error {
 
 	m := pmm.Modules[j]
 
+	// Build initial subject that captures passed flags
+	is := subject.Subject{
+		Type: subject.SubjectTopic,
+		Name: subjectName,
+		Date: subjectDate,
+	}
+
 	// module abs path defines where subject will reside
-	s, err := subject.SubjectFactory(subject.SubjectTopic, m.AbsPath, ss)
+	s, err := subject.SubjectFactory(is, m.AbsPath, ss)
 	if err != nil {
 		return err
 	}
@@ -206,8 +239,15 @@ func newObjective(p *project.Project) error {
 
 	m := pmm.Modules[j]
 
+	// Build initial subject that captures passed flags
+	is := subject.Subject{
+		Type: subject.SubjectObjective,
+		Name: subjectName,
+		Date: subjectDate,
+	}
+
 	// module abs path defines where subject will reside
-	s, err := subject.SubjectFactory(subject.SubjectObjective, m.AbsPath, ss)
+	s, err := subject.SubjectFactory(is, m.AbsPath, ss)
 	if err != nil {
 		return err
 	}

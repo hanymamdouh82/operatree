@@ -1,6 +1,6 @@
 # OperaTree
 
-> Your project operating system — built on your filesystem.
+> Your projects operation — built on your filesystem.
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/badge/go-1.21+-00ADD8.svg)](https://golang.org)
@@ -24,16 +24,16 @@ OperaTree takes the opposite approach:
 
 ```
 your-project/
-├── 00_ADMIN/          # governance, contacts, templates
-├── 01_EVENTS/         # visits, workshops, meetings
+├── 00_ADMIN/               # governance, contacts, templates
+├── 01_EVENTS/              # visits, workshops, meetings
 ├── 02_PROJECT_MANAGEMENT/  # tasks, reports, risks
-├── 03_LEGAL/          # contracts, NDAs, compliance
-├── 04_RESEARCH/       # topics, objectives, summaries
-├── 05_ENGINEERING/    # architecture, specs, decisions
-├── 06_DATA/           # raw → staging → processed pipeline
-├── 07_MEDIA_LIBRARY/  # shared reusable assets
-├── 08_DELIVERABLES/   # final external outputs
-└── 99_ARCHIVE/        # historical storage
+├── 03_LEGAL/               # contracts, NDAs, compliance
+├── 04_RESEARCH/            # topics, objectives, summaries
+├── 05_ENGINEERING/         # architecture, specs, decisions
+├── 06_DATA/                # raw → staging → processed pipeline
+├── 07_MEDIA_LIBRARY/       # shared reusable assets
+├── 08_DELIVERABLES/        # final external outputs
+└── 99_ARCHIVE/             # historical storage
 ```
 
 Each subject (event, task, topic, objective) lives in its own directory with a `META.yaml` file that makes it searchable, filterable, and machine-readable.
@@ -118,21 +118,23 @@ operatree explain                 # directory philosophy guide
 
 ## Commands
 
-| Command | Description |
-|---|---|
-| `operatree init` | Initialize OperaTree configuration |
-| `operatree bootstrap [name]` | Bootstrap a new project |
-| `operatree new [type]` | Create a new subject interactively |
+Commands are classified to two categories
+
+| Command                        | Description                             |
+| ------------------------------ | --------------------------------------- |
+| `operatree init`               | Initialize OperaTree configuration      |
+| `operatree bootstrap [name]`   | Bootstrap a new project                 |
+| `operatree new [type]`         | Create a new subject interactively      |
 | `operatree find [type] [term]` | Fuzzy-find subjects across all metadata |
-| `operatree desc` | Describe project structure |
-| `operatree summary` | Project summary with counts and status |
-| `operatree explain` | Print directory philosophy guide |
-| `operatree version` | Print version |
+| `operatree desc`               | Describe project structure              |
+| `operatree summary`            | Project summary with counts and status  |
+| `operatree explain`            | Print directory philosophy guide        |
+| `operatree version`            | Print version                           |
 
 ### Global Flags
 
-| Flag | Default | Description |
-|---|---|---|
+| Flag         | Default     | Description       |
+| ------------ | ----------- | ----------------- |
 | `-d, --dest` | from config | Project directory |
 
 ---
@@ -141,12 +143,12 @@ operatree explain                 # directory philosophy guide
 
 A subject is any trackable unit of work or knowledge within a project.
 
-| Type | Purpose | Key Fields |
-|---|---|---|
-| `event` | A project activity — visit, workshop, meeting | date, location, participants, tags |
-| `task` | A unit of work with a lifecycle | owner, status, related events |
-| `topic` | A knowledge concept or domain area | tags, notes, related objective |
-| `objective` | A goal driving research and decisions | status, findings, strategy |
+| Type        | Purpose                                       | Key Fields                         |
+| ----------- | --------------------------------------------- | ---------------------------------- |
+| `event`     | A project activity — visit, workshop, meeting | date, location, participants, tags |
+| `task`      | A unit of work with a lifecycle               | owner, status, related events      |
+| `topic`     | A knowledge concept or domain area            | tags, notes, related objective     |
+| `objective` | A goal driving research and decisions         | status, findings, strategy         |
 
 All subjects share common fields: `name`, `date`, `tags`, `notes`. Type-specific fields use `omitempty` so they never pollute unrelated subjects.
 
@@ -198,13 +200,13 @@ Projects are automatically registered when bootstrapped.
 
 OperaTree is in active development. The foundation is filesystem-first and stable. Future layers will be built on top without breaking it.
 
-| Phase | Description | Status |
-|---|---|---|
-| CLI | Filesystem engine, YAML metadata, fuzzy search, interactive forms | 🚧 Alpha |
-| Index sidecar | SQLite mirror for fast queries, no filesystem writes | 📋 Planned |
-| Daemon | API over the index, sync engine, configuration-driven engine selection | 📋 Planned |
-| Semantic search | Embeddings and vector search over subject metadata | 📋 Planned |
-| Web platform | Multi-user, web UI, enterprise features (commercial) | 💡 Vision |
+| Phase           | Description                                                            | Status     |
+| --------------- | ---------------------------------------------------------------------- | ---------- |
+| CLI             | Filesystem engine, YAML metadata, fuzzy search, interactive forms      | 🚧 Alpha   |
+| Index sidecar   | SQLite mirror for fast queries, no filesystem writes                   | 📋 Planned |
+| Daemon          | API over the index, sync engine, configuration-driven engine selection | 📋 Planned |
+| Semantic search | Embeddings and vector search over subject metadata                     | 📋 Planned |
+| Web platform    | Multi-user, web UI, enterprise features (commercial)                   | 💡 Vision  |
 
 ---
 
