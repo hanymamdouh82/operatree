@@ -85,10 +85,6 @@ func resolveProjectDir(cmd *cobra.Command, args []string) {
 		prjDir = cfg.Default.AbsPath
 		return
 	}
-
-	// 4. nothing — friendly error
-	// return fmt.Errorf("no project found. Use -d to specify one, or run 'operatree default' to set a default")
-	// fmt.Errorf("no project found. Use -d to specify one, or run 'operatree default' to set a default")
 }
 
 func isProjectDir(path string) bool {

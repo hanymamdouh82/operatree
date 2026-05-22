@@ -8,7 +8,7 @@ import (
 
 // returns Dev project template
 // `bpth` is the abs base dir for the project, without project name included into it
-func tmpltDev(name string, bpth string) Project {
+func tmpltGeneral(name string, bpth string) Project {
 
 	ppth := path.Join(bpth, name)
 
@@ -19,12 +19,8 @@ func tmpltDev(name string, bpth string) Project {
 			module.FactoryAdmin(ppth, "00"),
 			module.FactoryEvents(ppth, "01"),
 			module.FactoryProjectManagement(ppth, "02"),
-			module.FactoryLegal(ppth, "03"),
-			module.FactoryResearch(ppth, "04"),
-			module.FactoryEngineering(ppth, "05"),
-			module.FactoryData(ppth, "06"),
-			module.FactoryMediaLib(ppth, "07"),
-			module.FactoryDeliverables(ppth, "08"),
+			module.FactoryMediaLib(ppth, "03"),
+			module.FactoryDeliverables(ppth, "04"),
 			module.FactoryArchive(ppth, "99"),
 		},
 	}

@@ -2,9 +2,7 @@ package cmd
 
 import (
 	"log"
-	"os"
 
-	"github.com/charmbracelet/huh"
 	"github.com/hanymamdouh82/operatree/internal/config"
 	"github.com/spf13/cobra"
 )
@@ -22,81 +20,7 @@ var initCmd = &cobra.Command{
 }
 
 func initConfig(cmd *cobra.Command, args []string) {
-
-	// Check if config already exists
-	existing, err := config.Load()
-	if err != nil {
+	if err := config.InitializeConfig(); err != nil {
 		log.Fatal(err)
 	}
-
-	var standardDir string
-	var overwrite bool
-	var defaultFileManager string
-
-	if existing.StandardDir != "" {
-		// Config already exists — ask before overwriting
-		huh.NewForm(
-			huh.NewGroup(
-				huh.NewConfirm().
-					Title("Config already exists. Overwrite?").
-					Value(&overwrite),
-			),
-		).Run()
-
-		if !overwrite {
-			return
-		}
-		standardDir = existing.StandardDir // pre-fill with existing value
-	}
-
-	err = huh.NewForm(
-		huh.NewGroup(
-			huh.NewInput().
-				Title("Standard projects directory").
-				Description("Default location where all projects will be created").
-				Placeholder("/home/user/projects").
-				Value(&standardDir),
-		),
-	).Run()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = huh.NewForm(
-		huh.NewGroup(
-			huh.NewInput().
-				Title("Default file manager").
-				Description("Default binary name for file manager").
-				Placeholder("yazi").
-				Value(&defaultFileManager),
-		),
-	).Run()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// get default editor
-	editor := os.Getenv("EDITOR")
-
-	cfg := config.Config{
-		StandardDir: standardDir,
-		Editor:      editor,
-		FileManager: defaultFileManager,
-		Projects:    existing.Projects, // preserve tracked projects if overwriting
-		Daemon: config.Daemon{
-			Enabled:  false,
-			Host:     "localhost",
-			Port:     7070,
-			DBDriver: "sqlite",
-		},
-	}
-
-	if err := config.Save(cfg); err != nil {
-		log.Fatal(err)
-	}
-
-	path, _ := config.ConfigPath()
-	// reuse your existing Describe styling
-	// just a simple confirmation for now
-	println("\nConfig saved to: " + path + "\n")
 }

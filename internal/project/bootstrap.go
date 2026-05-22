@@ -1,6 +1,8 @@
 package project
 
 import (
+	"fmt"
+
 	"github.com/hanymamdouh82/operatree/internal/config"
 	"github.com/hanymamdouh82/operatree/internal/filesystem"
 )
@@ -8,11 +10,16 @@ import (
 // Bootstraps a project by creating project struct and call bootstrap modules
 // Bootstrap calls different bootstrap functions based on template.
 // `bpth` is the abs base path for the project. It souldn't include project name
-// To-Do: add templates
-func Bootstrap(name string, bpth string) (Project, error) {
+// `t` template name
+func Bootstrap(name string, bpth string, t string) (Project, error) {
 
-	// To-Do: replace with map for different templates
-	np := tmpltDev(name, bpth)
+	// get template factory from templates map
+	tf, ok := tmplts[t]
+	if !ok {
+		return Project{}, fmt.Errorf("undefined template")
+	}
+	np := tf(name, bpth)
+	np.Template = t
 
 	// create project dir
 	if err := filesystem.CreateDir(np.ProjectDir()); err != nil {
@@ -34,7 +41,7 @@ func Bootstrap(name string, bpth string) (Project, error) {
 	}
 
 	// Register in config
-	if err := config.AddProject(name, np.ProjectDir(), "dev"); err != nil {
+	if err := config.AddProject(name, np.ProjectDir(), t); err != nil {
 		return np, err
 	}
 

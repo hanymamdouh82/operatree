@@ -2,14 +2,15 @@
 package module
 
 import (
+	"fmt"
 	"path"
 
 	"github.com/hanymamdouh82/operatree/internal/subject"
 )
 
-func FactoryAdmin(ppth string) Module {
+func FactoryAdmin(ppth string, prfx string) Module {
 
-	n := "00_ADMIN"
+	n := fmt.Sprintf("%s_%s", prfx, "ADMIN")
 	m := Module{
 		Type:     ModuleAdmin,
 		Name:     n,
@@ -27,9 +28,9 @@ func FactoryAdmin(ppth string) Module {
 	return m
 }
 
-func FactoryEvents(ppth string) Module {
+func FactoryEvents(ppth string, prfx string) Module {
 
-	n := "01_EVENTS"
+	n := fmt.Sprintf("%s_%s", prfx, "EVENTS")
 	m := Module{
 		Type:     ModuleEvents,
 		Name:     n,
@@ -42,9 +43,9 @@ func FactoryEvents(ppth string) Module {
 	return m
 }
 
-func FactoryProjectManagement(ppth string) Module {
+func FactoryProjectManagement(ppth string, prfx string) Module {
 
-	n := "02_PROJECT_MANAGEMENT"
+	n := fmt.Sprintf("%s_%s", prfx, "PROJECT_MANAGEMENT")
 	m := Module{
 		Type:    ModuleProjectManagement,
 		Name:    n,
@@ -73,9 +74,9 @@ func FactoryProjectManagement(ppth string) Module {
 }
 
 // Legal module
-func FactoryLegal(ppth string) Module {
+func FactoryLegal(ppth string, prfx string) Module {
 
-	n := "03_LEGAL"
+	n := fmt.Sprintf("%s_%s", prfx, "LEGAL")
 	m := Module{
 		Type:     ModuleLegal,
 		Name:     n,
@@ -95,9 +96,9 @@ func FactoryLegal(ppth string) Module {
 }
 
 // Research module, basically it is a collection of submodules
-func FactoryResearch(ppth string) Module {
+func FactoryResearch(ppth string, prfx string) Module {
 
-	n := "04_RESEARCH"
+	n := fmt.Sprintf("%s_%s", prfx, "RESEARCH")
 	m := Module{
 		Type:    ModuleResearch,
 		Name:    n,
@@ -178,9 +179,9 @@ func FactoryResearch(ppth string) Module {
 }
 
 // Engineering module
-func FactoryEngineering(ppth string) Module {
+func FactoryEngineering(ppth string, prfx string) Module {
 
-	n := "05_ENGINEERING"
+	n := fmt.Sprintf("%s_%s", prfx, "ENGINEERING")
 	m := Module{
 		Type:     ModuleEngineering,
 		Name:     n,
@@ -205,9 +206,9 @@ func FactoryEngineering(ppth string) Module {
 // Although subdirs looks like modules; they are actually non-managed modules
 // Sources is a sub-module, since it will be controlled from CLI and it has metadata to index Sources
 // and ensure they are searchable
-func FactoryData(ppth string) Module {
+func FactoryData(ppth string, prfx string) Module {
 
-	n := "06_DATA"
+	n := fmt.Sprintf("%s_%s", prfx, "DATA")
 	m := Module{
 		Type:    ModuleData,
 		Name:    n,
@@ -238,9 +239,9 @@ func FactoryData(ppth string) Module {
 }
 
 // Media Library module
-func FactoryMediaLib(ppth string) Module {
+func FactoryMediaLib(ppth string, prfx string) Module {
 
-	n := "07_MEDIA_LIBRARY"
+	n := fmt.Sprintf("%s_%s", prfx, "MEDIA_LIBRARY")
 	m := Module{
 		Type:     ModuleMediaLibrary,
 		Name:     n,
@@ -260,9 +261,9 @@ func FactoryMediaLib(ppth string) Module {
 }
 
 // Media Deliverables
-func FactoryDeliverables(ppth string) Module {
+func FactoryDeliverables(ppth string, prfx string) Module {
 
-	n := "08_DELIVERABLES"
+	n := fmt.Sprintf("%s_%s", prfx, "DELIVERABLES")
 	m := Module{
 		Type:     ModuleDeliverables,
 		Name:     n,
@@ -282,9 +283,9 @@ func FactoryDeliverables(ppth string) Module {
 
 // Archive module, just an empty dir. It is managed by special CLI command `archive` that moves
 // any file to the archive dir
-func FactoryArchive(ppth string) Module {
+func FactoryArchive(ppth string, prfx string) Module {
 
-	n := "09_ARCHIVE"
+	n := fmt.Sprintf("%s_%s", prfx, "ARCHIVE")
 	m := Module{
 		Type:     ModuleArchive,
 		Name:     n,

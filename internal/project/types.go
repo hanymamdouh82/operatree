@@ -15,10 +15,18 @@ const (
 )
 
 type Project struct {
-	Name    string          `yaml:"name"`
-	BaseDir string          `yaml:"baseDir"`
-	Tags    []string        `yaml:"tags"`
-	Modules []module.Module `yaml:"modules"`
+	Name     string          `yaml:"name"`
+	Template string          `yaml:"template"`
+	BaseDir  string          `yaml:"baseDir"`
+	Tags     []string        `yaml:"tags"`
+	Modules  []module.Module `yaml:"modules"`
+}
+
+type tmpltMap map[string]func(name string, bpth string) Project
+
+var tmplts tmpltMap = tmpltMap{
+	"general": tmpltGeneral,
+	"dev":     tmpltDev,
 }
 
 func (p *Project) ProjectName() string {
