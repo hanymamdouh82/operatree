@@ -207,17 +207,34 @@ var (
 )
 ```
 
-Add a case in `newSubject`:
+Add a map entry in `argsToSubject`:
 
 ```go
 // cmd/new.go
-case "meeting":
-    if err := newMeeting(&p); err != nil {
-        log.Fatal(err)
-    }
+var (
+	argToSubject map[string]subject.SubjectType = map[string]subject.SubjectType{
+		"event":     subject.SubjectEvent,
+		"task":      subject.SubjectTask,
+		"topic":     subject.SubjectTopic,
+		"objective": subject.SubjectObjective,
+		"meeting": subject.SubjectMeeting,
+	}
+)
 ```
 
-And implement `newMeeting` following the same pattern as `newEvent`.
+Add a map entry in `argsToSubject` for which module the subject belongs to:
+
+```go
+// internal/project/types.go
+// SubjectModuleMap maps each subject type to its corresponding storage module
+var SubjectModuleMap = map[subject.SubjectType]module.ModuleType{
+	subject.SubjectEvent:     module.ModuleEvents,
+	subject.SubjectTask:      module.ModuleTasks,
+	subject.SubjectTopic:     module.ModuleTopics,
+	subject.SubjectObjective: module.ModuleObjectives,
+	subject.SubjectMeeting:   module.ModuleEvents,
+}
+```
 
 **Step 6 — Update README**
 

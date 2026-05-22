@@ -9,14 +9,6 @@ import (
 	"github.com/hanymamdouh82/operatree/internal/subject"
 )
 
-// SubjectModuleMap maps each subject type to its corresponding storage module
-var SubjectModuleMap = map[subject.SubjectType]module.ModuleType{
-	subject.SubjectEvent:     module.ModuleEvents,
-	subject.SubjectTask:      module.ModuleTasks,
-	subject.SubjectTopic:     module.ModuleTopics,
-	subject.SubjectObjective: module.ModuleObjectives,
-}
-
 // NewSubject creates a new subject of the specified type in its corresponding module.
 // Parameters:
 //   - p: target project
