@@ -74,3 +74,15 @@ func ReadFile(mp string) ([]byte, error) {
 
 	return os.ReadFile(mp)
 }
+
+func Archive(srcPth, trgPth string) error {
+
+	// we depend on os.Rename. This doesn't allow moving cross-partition.
+	// Since projects is maintained by `OperaTree` we primarily assume no cross-partition.
+	// To-Do: implement recursive copy/delete later when daemon is implemented.
+	if err := os.Rename(srcPth, trgPth); err != nil {
+		return err
+	}
+
+	return nil
+}

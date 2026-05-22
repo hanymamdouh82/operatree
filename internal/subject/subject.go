@@ -156,10 +156,6 @@ func (s *Subject) Describe() {
 
 func (s *Subject) EditMetadata() error {
 
-	// call config to get editor
-
-	// run editor
-
 	fn := path.Join(s.DirName, METADATA_FILE)
 	if err := runner.EditFile(fn); err != nil {
 		return err

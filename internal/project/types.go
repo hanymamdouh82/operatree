@@ -3,6 +3,7 @@ package project
 import (
 	"fmt"
 	"path"
+	"slices"
 
 	"github.com/hanymamdouh82/operatree/internal/filesystem"
 	"github.com/hanymamdouh82/operatree/internal/module"
@@ -73,9 +74,26 @@ func (p *Project) WriteMetadata() error {
 	return nil
 }
 
-func (p *Project) Events() []subject.Subject {
+// Confirms module exists, if exists it returns the module.
+func (p *Project) ModuleExists(name string) (module.Module, error) {
 
-	ss := ListSubjects(p, subject.SubjectEvent)
+	midx := slices.IndexFunc(p.Modules, func(m module.Module) bool {
+		return m.Name == name
+	})
 
-	return ss
+	if midx == -1 {
+		return module.Module{}, fmt.Errorf("project doesn't contain module %s", name)
+	}
+
+	return p.Modules[midx], nil
+}
+
+// Archives a subject by moving to project Archive module
+func (p *Project) Archive(s subject.Subject) error {
+
+	if err := Archive(p, s); err != nil {
+		return err
+	}
+
+	return nil
 }
