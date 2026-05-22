@@ -21,7 +21,7 @@ var newCmd = &cobra.Command{
 	Use:       "new [event | task | topic | objective]",
 	Short:     "Creates new subject",
 	Long:      "Creates new subject within project",
-	ValidArgs: []cobra.Completion{"event", "task", "topic", "objective"},
+	ValidArgs: SubjectValidArgs,
 	Args:      cobra.MatchAll(cobra.OnlyValidArgs, cobra.ExactArgs(1)),
 	Run:       newSubject,
 }

@@ -12,10 +12,11 @@ import (
 )
 
 var (
-	baseDir string // abs base dir where project is located. Doesn't include project name
-	prjDir  string // abs path of project including its name
-	verbose bool   // verbose flag
-	cfg     config.Config
+	baseDir          string // abs base dir where project is located. Doesn't include project name
+	prjDir           string // abs path of project including its name
+	verbose          bool   // verbose flag
+	cfg              config.Config
+	SubjectValidArgs []cobra.Completion = []cobra.Completion{"event", "task", "topic", "objective"}
 )
 
 var rootCmd = &cobra.Command{

@@ -19,6 +19,7 @@ This document explains how to contribute effectively — whether you're fixing a
   - [Adding a Project Template](#adding-a-project-template)
   - [Improving Search](#improving-search)
   - [Version Control & Backup Backends](#version-control--backup-backends)
+- [On the Use of AI Tools](#on-the-use-of-ai-tools)
 - [Commit Convention](#commit-convention)
 - [Pull Request Process](#pull-request-process)
 - [License](#license)
@@ -28,6 +29,8 @@ This document explains how to contribute effectively — whether you're fixing a
 ## Code of Conduct
 
 Be respectful. Be constructive. Disagreements about technical direction are welcome — personal attacks are not. Contributors are expected to maintain a professional and inclusive environment.
+
+OperaTree is a deliberately minimal tool. The filesystem-first philosophy is a constraint, not a starting point — and that constraint applies to features too. Contributions are expected to reflect genuine understanding of the project's direction, not a desire to add surface area for its own sake.
 
 ---
 
@@ -80,29 +83,33 @@ make install
 ```
 operatree/
 ├── cmd/                    # Cobra CLI commands
-│   ├── root.go             # root command, global flags, project dir resolution
+│   ├── archive.go          # operatree archive
 │   ├── bootstrap.go        # operatree bootstrap
-│   ├── new.go              # operatree new
+│   ├── default.go          # operatree default
+│   ├── describe.go         # operatree desc
 │   ├── find.go             # operatree find
+│   ├── help.go             # operatree help
+│   ├── init.go             # operatree init
 │   ├── metadata.go         # operatree metadata
+│   ├── new.go              # operatree new
 │   ├── open.go             # operatree open
+│   ├── root.go             # root command, global flags, project dir resolution
+│   ├── summary.go          # operatree summary
 │   ├── sync.go             # operatree sync
 │   ├── track.go            # operatree track
 │   ├── untrack.go          # operatree untrack
-│   ├── describe.go         # operatree desc
-│   ├── summary.go          # operatree summary
-│   ├── default.go          # operatree default
-│   ├── init.go             # operatree init
 │   └── version.go          # operatree version
 ├── internal/
 │   ├── activitylog/        # append-only activity log
 │   ├── config/             # config file management
-│   ├── project/            # project struct, bootstrap, search, describe, sync
-│   ├── module/             # module struct and factories
-│   ├── subject/            # subject struct, factory, interactive CLI
-│   ├── metadata/           # tag and participant parsing utilities
 │   ├── filesystem/         # filesystem helpers
-│   └── help/               # embedded documentation
+│   ├── help/               # embedded documentation
+│   ├── metadata/           # tag and participant parsing utilities
+│   ├── module/             # module struct and factories
+│   ├── project/            # project struct, bootstrap, search, describe, sync
+│   ├── runner/             # external binaries runner
+│   ├── subject/            # subject struct, factory, interactive CLI
+│   └── ui/                 # ui utilities
 ├── demo/                   # VHS tape and recorded demo
 ├── LICENSE
 ├── README.md
@@ -141,7 +148,7 @@ This is the most common and most valued contribution. Subject types are the exte
 **Step 1 — Add the constant**
 
 ```go
-// internal/subject/subject.go
+// internal/subject/types.go
 const (
     SubjectEvent     SubjectType = "event"
     SubjectTask      SubjectType = "task"
@@ -171,7 +178,7 @@ type Subject struct {
 Add a branch in `interactiveCLI` for your type's specific fields:
 
 ```go
-// internal/subject/cli.go
+// internal/subject/interactive.go
 if st == SubjectMeeting {
     var agenda string
 
@@ -193,16 +200,17 @@ if st == SubjectMeeting {
 **Step 4 — Register in the CLI command**
 
 ```go
-// cmd/new.go
-var newCmd = &cobra.Command{
-    ValidArgs: []cobra.Completion{"event", "task", "topic", "objective", "meeting"},
-    // ...
-}
+// cmd/root.go
+var (
+	//...
+	SubjectValidArgs []cobra.Completion = []cobra.Completion{"event", "task", "topic", "objective", "meeting"}
+)
 ```
 
-Add a case in `newUnitEntity`:
+Add a case in `newSubject`:
 
 ```go
+// cmd/new.go
 case "meeting":
     if err := newMeeting(&p); err != nil {
         log.Fatal(err)
@@ -210,21 +218,6 @@ case "meeting":
 ```
 
 And implement `newMeeting` following the same pattern as `newEvent`.
-
-**Step 5 — Update the known types map**
-
-The known types map is used by `find`, `metadata`, and `open` to distinguish a type filter from a search term:
-
-```go
-// cmd/root.go or cmd/find.go
-var knownTypes = map[string]bool{
-    "event":     true,
-    "task":      true,
-    "topic":     true,
-    "objective": true,
-    "meeting":   true,  // ← add here
-}
-```
 
 **Step 6 — Update README**
 
@@ -236,12 +229,13 @@ That's it. No core changes, no breaking changes, no migration needed. Existing `
 
 ### Adding a Project Template
 
-Templates define what a bootstrapped project looks like. The current template is `dev` — designed for software development companies.
+Templates define what a bootstrapped project looks like. The current templates are `dev` — designed for software development companies, and `general`
+for general purposes.
 
 **Step 1 — Create the template function**
 
 ```go
-// internal/project/templates.go
+// internal/project/template_<template_name>.go
 func tmpltResearch(name string, bpth string) Project {
     ppth := path.Join(bpth, name)
 
@@ -249,11 +243,11 @@ func tmpltResearch(name string, bpth string) Project {
         Name:    name,
         BaseDir: bpth,
         Modules: []module.Module{
-            module.FactoryAdmin(ppth),
-            module.FactoryResearch(ppth),
-            module.FactoryData(ppth),
-            module.FactoryDeliverables(ppth),
-            module.FactoryArchive(ppth),
+            module.FactoryAdmin(ppth, "00"),
+            module.FactoryResearch(ppth, "01"),
+            module.FactoryData(ppth, "02"),
+            module.FactoryDeliverables(ppth, "03"),
+            module.FactoryArchive(ppth, "04"),
         },
     }
 }
@@ -262,10 +256,10 @@ func tmpltResearch(name string, bpth string) Project {
 **Step 2 — Register in the template map**
 
 ```go
-// internal/project/bootstrap.go
-var templates = map[string]func(string, string) Project{
-    "dev":      tmpltDev,
-    "research": tmpltResearch,  // ← add here
+// internal/project/types.go
+var templates tmpltMap = tmpltMap{
+	"general": tmpltGeneral,
+	"dev":     tmpltDev,
 }
 ```
 
@@ -277,12 +271,13 @@ Document your template — what domain it targets and what modules it includes.
 
 ### Improving Search
 
-The search pipeline lives in `internal/project/search.go`. The current approach concatenates metadata fields into a `SearchStr` per subject and runs fuzzy matching against it. The full project tree is walked recursively via `walkModule`, building a flat `[]SearchDB` with `ModulePath` breadcrumbs.
+The search pipeline lives in `internal/project/search_builder.go`. The current approach concatenates metadata fields into a `SearchStr` per subject and runs fuzzy matching against it. The full project tree is walked recursively via `walkModule`, building a flat `[]SearchDB` with `ModulePath` breadcrumbs.
 
 The same search is used by `find`, `metadata`, and `open` — improvements benefit all three commands automatically.
 
 Potential improvements welcome:
 
+- **CLI only** — search based on CLI flags avoiding interactive CLI
 - **Field weighting** — name matches should rank higher than note matches
 - **Ranked results** — sort by relevance score not just match/no-match
 - **Date-aware search** — `find last-week` or `find 2026-05`
@@ -321,6 +316,20 @@ If you're working on this area, open an issue first to discuss the approach. Thi
 
 ---
 
+## On the Use of AI Tools
+
+AI tools are welcome here — for brainstorming, exploring approaches, drafting, or checking your own work. Many contributors use them productively and that's fine.
+
+What we ask is that **you** remain the author of your contribution. This means:
+
+- You understand every line you submit and can explain the reasoning behind it
+- The code follows the patterns already established in the codebase — not patterns an AI defaulted to
+- You're not submitting a feature because it was easy to generate, but because it genuinely belongs in the project
+
+OperaTree grows slowly and deliberately. A contribution that adds weight without a clear purpose will be declined regardless of how it was written. If a reviewer asks "why this approach?", the answer should come from you.
+
+---
+
 ## Commit Convention
 
 OperaTree follows [Conventional Commits](https://www.conventionalcommits.org/):
@@ -335,14 +344,14 @@ OperaTree follows [Conventional Commits](https://www.conventionalcommits.org/):
 
 **Types:**
 
-| Type | When to use |
-|---|---|
-| `feat` | New feature or subject type |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
+| Type       | When to use                                             |
+| ---------- | ------------------------------------------------------- |
+| `feat`     | New feature or subject type                             |
+| `fix`      | Bug fix                                                 |
+| `docs`     | Documentation only                                      |
 | `refactor` | Code change that neither fixes a bug nor adds a feature |
-| `test` | Adding or updating tests |
-| `chore` | Build process, dependencies, tooling |
+| `test`     | Adding or updating tests                                |
+| `chore`    | Build process, dependencies, tooling                    |
 
 **Examples:**
 
@@ -369,6 +378,7 @@ refactor(search): extract walkModule into separate file
 **PR checklist:**
 
 - [ ] Follows existing code patterns and naming conventions
+- [ ] I can explain the reasoning behind every change in this PR
 - [ ] New subject types use `omitempty` on all type-specific fields
 - [ ] New subject types added to `knownTypes` map
 - [ ] New commands registered in both `cmd/` and `ValidArgs` where applicable

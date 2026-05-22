@@ -59,6 +59,7 @@ Each subject (event, task, topic, objective) lives in its own directory with a `
 - **Create subjects** interactively — events, tasks, topics, objectives
 - **Fuzzy search** across all metadata fields: names, tags, participants, notes, dates, locations
 - **Edit subject metadata** directly in your preferred editor
+- **Archive subject** by moving to `99_ARCHIVE` directory
 - **Open subject directories** in your preferred file manager
 - **Sync** project metadata with manually edited subject files
 - **Track and untrack** existing projects without bootstrapping
@@ -172,33 +173,35 @@ operatree untrack                 # remove current directory project from tracke
 
 ## Commands
 
-| Command                            | Description                                           |
-| ---------------------------------- | ----------------------------------------------------- |
-| `operatree init`                   | Initialize OperaTree configuration                    |
-| `operatree bootstrap [name]`       | Bootstrap a new project                               |
-| `operatree new [type]`             | Create a new subject interactively                    |
-| `operatree find [type] [term]`     | Fuzzy-find subjects across all metadata               |
-| `operatree metadata [type] [term]` | Find a subject and open its metadata in editor        |
-| `operatree open [type] [term]`     | Find a subject and open its directory in file manager |
-| `operatree sync`                   | Sync project metadata with subject files on disk      |
-| `operatree track`                  | Add current project to tracked list                   |
-| `operatree untrack`                | Remove current project from tracked list              |
-| `operatree default`                | Set default project interactively                     |
-| `operatree desc`                   | Describe project structure                            |
-| `operatree summary`                | Project summary with counts and status                |
-| `operatree explain`                | Print directory philosophy guide                      |
-| `operatree version`                | Print version, commit, and build date                 |
+| Command                            | Description                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------ |
+| `operatree init`                   | Initialize OperaTree configuration                                       |
+| `operatree bootstrap [name]`       | Bootstrap a new project                                                  |
+| `operatree new [type]`             | Create a new subject interactively                                       |
+| `operatree find [type] [term]`     | Fuzzy-find subjects across all metadata                                  |
+| `operatree metadata [type] [term]` | Find a subject and open its metadata in editor                           |
+| `operatree open [type] [term]`     | Find a subject and open its directory in file manager                    |
+| `operatree archive [type] [term]`  | Find a subject and archives its directory in 99_ARCHIVE module directory |
+| `operatree sync`                   | Sync project metadata with subject files on disk                         |
+| `operatree track`                  | Add current project to tracked list                                      |
+| `operatree untrack`                | Remove current project from tracked list                                 |
+| `operatree default`                | Set default project interactively                                        |
+| `operatree desc`                   | Describe project structure                                               |
+| `operatree summary`                | Project summary with counts and status                                   |
+| `operatree explain`                | Print directory philosophy guide                                         |
+| `operatree version`                | Print version, commit, and build date                                    |
 
 ### Flags
 
-| Flag            | Command     | Description                                     |
-| --------------- | ----------- | ----------------------------------------------- |
-| `-d, --dest`    | all         | Override project directory                      |
-| `--plain`       | `desc`      | Output raw YAML instead of styled view          |
-| `--show`        | `default`   | Show current default project                    |
-| `--name`        | `new`       | Sets name for subject and skips interactive CLI |
-| `--date`        | `new`       | Sets date for subject and skips interactive CLI |
-| `-v, --verbose` | `bootstrap` | Print project structure after creation          |
+| Flag             | Command     | Description                                     |
+| ---------------- | ----------- | ----------------------------------------------- |
+| `-d, --dest`     | all         | Override project directory                      |
+| `-t, --template` | `bootstrap` | define project template                         |
+| `--plain`        | `desc`      | Output raw YAML instead of styled view          |
+| `--show`         | `default`   | Show current default project                    |
+| `--name`         | `new`       | Sets name for subject and skips interactive CLI |
+| `--date`         | `new`       | Sets date for subject and skips interactive CLI |
+| `-v, --verbose`  | `bootstrap` | Print project structure after creation          |
 
 ### Project Directory Resolution
 
@@ -333,7 +336,7 @@ OperaTree's filesystem-first design makes it naturally compatible with any versi
 
 **Layer 1 — Change detection:** a file watcher monitors the project directory and triggers an action when files are added, modified, or deleted. Tools that fit this role include:
 
-- [`watchexec`](https://github.com/watchexec/watchexec) — a general-purpose file watcher with flexible trigger rules
+- [`watchexec`](https://github.com/hanymamdouh82/watchexec) — a general-purpose directoris watcher with flexible trigger rules, delays, exclusion lists, etc.
 - [`inotifywait`](https://github.com/inotify-tools/inotify-tools) — Linux-native filesystem event monitoring
 - [`fswatch`](https://github.com/emcrisostomo/fswatch) — cross-platform file change monitor
 
@@ -346,23 +349,6 @@ OperaTree's filesystem-first design makes it naturally compatible with any versi
 | Directory sync        | `rsync`      | Mirror to another machine or drive           |
 | Continuous sync       | `syncthing`  | Real-time multi-device sync without a server |
 | Cloud backup          | `rclone`     | S3, Google Drive, Dropbox, etc.              |
-
-### Example: watchexec + git
-
-```bash
-# Auto-commit any change in the project directory
-watchexec --watch /my/project -- \
-  git -C /my/project add -A && \
-  git -C /my/project commit -m "auto: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-```
-
-### Example: watchexec + rsync
-
-```bash
-# Mirror to a backup location on every change
-watchexec --watch /my/project -- \
-  rsync -av /my/project/ /backup/project/
-```
 
 OperaTree does not ship a built-in watcher or backup engine — this is an intentional design decision. The right strategy depends on your environment, team size, and infrastructure. The filesystem layout is the contract; how you protect it is yours to decide.
 
@@ -380,7 +366,7 @@ OperaTree is in active development. The foundation is filesystem-first and stabl
 | Version control integration | Native watchexec/git hooks, configurable watcher and action backends            | 📋 Planned |
 | Index sidecar               | SQLite mirror for fast queries, no filesystem writes                            | 📋 Planned |
 | Daemon                      | API over the index, sync engine, configuration-driven engine selection          | 📋 Planned |
-| Semantic search             | Embeddings and vector search over subject metadata                              | 📋 Planned |
+| Semantic search             | Embeddings and vector search over subject metadata, and contents (with Daemon)  | 📋 Planned |
 | Web platform                | Multi-user, web UI, enterprise features (commercial)                            | 💡 Vision  |
 
 ---
