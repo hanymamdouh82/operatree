@@ -4,38 +4,25 @@ import (
 	"fmt"
 	"path"
 
-	"github.com/hanymamdouh82/operatree/internal/types"
-	"github.com/hanymamdouh82/operatree/internal/units/event"
+	"github.com/hanymamdouh82/operatree/internal/filesystem"
+	"github.com/hanymamdouh82/operatree/internal/module"
+	"github.com/hanymamdouh82/operatree/internal/subject"
 	"gopkg.in/yaml.v3"
 )
 
 const (
-	METADATA_FILE = "metadata.yml"
+	METADATA_FILE = "METADATA.yml"
 )
 
-type Unit interface {
-	Bootstrap(pth string) error
-	UnitDir() string
-	SetParentDir(pth string)
-	SetUnitName()
-	SetUnitDir()
-	SetUnitType(t types.UnitType)
-	UnitType() types.UnitType
-}
-
 type Project struct {
-	Name    string   `yaml:"name"`
-	BaseDir string   `yaml:"baseDir"`
-	Tags    []string `yaml:"tags"`
-	Units   []Unit   `yaml:"units"`
+	Name    string          `yaml:"name"`
+	BaseDir string          `yaml:"baseDir"`
+	Tags    []string        `yaml:"tags"`
+	Modules []module.Module `yaml:"modules"`
 }
 
 func (p *Project) ProjectName() string {
 	return p.Name
-}
-
-func (p *Project) MetadataFile() string {
-	return path.Join(p.ProjectDir(), METADATA_FILE)
 }
 
 // Returns base dir of the project. It is the dir where project resides
@@ -54,27 +41,33 @@ func (p *Project) ProjectDir() string {
 // It is useful since users of CLI always needs a way to display all project details
 // the displayed information should follow UNIX/Linux style so it can be piped to
 // or chained with GNU tools such as `sed`, `cut`, `grep`, etc
-func (p *Project) Describe() error {
-	k, err := yaml.Marshal(p)
-	if err != nil {
-		return err
+func (p *Project) Describe(plain bool) error {
+	if plain {
+		y, err := yaml.Marshal(p)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("%s\n", y)
+		return nil
 	}
 
-	// To-Do: format output instead of plain yaml format
-	fmt.Printf("%s\n", k)
+	describeProject(p)
 	return nil
 }
 
-// Use to add unit to project, it is reponsible to set required project properties into unit
-// t: unit type, it is very important since it defines unit types during loading
-func (p *Project) AddUnit(u Unit, t types.UnitType) {
-	u.SetUnitType(t)
-	u.SetUnitName()
-	u.SetParentDir(p.ProjectDir())
-	u.SetUnitDir()
-	p.Units = append(p.Units, u)
+func (p *Project) WriteMetadata() error {
+
+	fn := path.Join(p.ProjectDir(), METADATA_FILE)
+	if err := filesystem.StructToFile(p, fn); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (p *Project) UnitEvents() (*event.UnitEvents, error) {
-	return GetUnit[*event.UnitEvents](p, types.UnitEvents)
+func (p *Project) Events() []subject.Subject {
+
+	ss := ListSubjects(p, subject.SubjectEvent)
+
+	return ss
 }

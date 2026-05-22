@@ -3,71 +3,276 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
+	"slices"
 
+	"github.com/hanymamdouh82/operatree/internal/activitylog"
+	"github.com/hanymamdouh82/operatree/internal/module"
 	"github.com/hanymamdouh82/operatree/internal/project"
-	"github.com/hanymamdouh82/operatree/internal/units/event"
+	"github.com/hanymamdouh82/operatree/internal/subject"
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v3"
 )
 
-var entityName string
+var silent bool
+var subjectName string
+var subjectDate string
 
 func init() {
-	newCmd.Flags().StringVarP(&pDir, "dest", "d", "/mnt/extra/onfly/testprj", "project directory")
-	newCmd.Flags().StringVarP(&entityName, "name", "n", "", "entity name")
+	newCmd.Flags().BoolVarP(&silent, "silent", "s", false, "omit interactive CLI")
+	newCmd.Flags().StringVar(&subjectName, "name", "", "subject name")
+	newCmd.Flags().StringVar(&subjectName, "date", "", "subject date")
 	rootCmd.AddCommand(newCmd)
 }
 
 var newCmd = &cobra.Command{
-	Use:       "new [event | task]",
-	Short:     "creates new entity",
-	Long:      "creates new entity within project",
-	ValidArgs: []cobra.Completion{"event", "task"},
+	Use:       "new [event | task | topic | objective]",
+	Short:     "Creates new subject",
+	Long:      "Creates new subject within project",
+	ValidArgs: []cobra.Completion{"event", "task", "topic", "objective"},
 	Args:      cobra.MatchAll(cobra.OnlyValidArgs, cobra.ExactArgs(1)),
 	Run:       newUnitEntity,
 }
 
 func newUnitEntity(cmd *cobra.Command, args []string) {
 	a := args[0]
-	p, err := project.Load(pDir)
+	p, err := project.Load(prjDir)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	// silent requires --name at least to be provided
+	if silent && subjectName == "" {
+		log.Fatal(fmt.Errorf("silent mode requires --name flag"))
+	}
+
 	switch a {
 	case "event":
-		newEvent(&p)
+		if err := newEvent(&p); err != nil {
+			log.Fatal(err)
+		}
+
 	case "task":
-		fmt.Println("will create task")
+		if err := newTask(&p); err != nil {
+			log.Fatal(err)
+		}
+
+	case "topic":
+		if err := newTopic(&p); err != nil {
+			log.Fatal(err)
+		}
+
+	case "objective":
+		if err := newObjective(&p); err != nil {
+			log.Fatal(err)
+		}
+
 	default:
-		fmt.Println("i shouldn't be here")
+		return
 	}
 }
 
+// Adds new event to Events module
 func newEvent(p *project.Project) error {
-	u, err := p.UnitEvents()
+	ss := project.ListSubjects(p, "")
+
+	i := slices.IndexFunc(p.Modules, func(m module.Module) bool {
+		return m.Type == module.ModuleEvents
+	})
+	m := p.Modules[i]
+
+	// Build initial subject that captures passed flags
+	is := subject.Subject{
+		Type: subject.SubjectEvent,
+		Name: subjectName,
+		Date: subjectDate,
+	}
+
+	// module abs path defines where subject will reside
+	s, err := subject.SubjectFactory(is, m.AbsPath, ss)
 	if err != nil {
 		return err
 	}
 
-	// if name flag is not provided, we open interactive CLI
-	var e event.Event
-	if entityName == "" {
-		if e, err = u.NewInteractive(); err != nil {
-			return err
-		}
-		y, _ := yaml.Marshal(e)
-		fmt.Printf("%s\n", y)
-		return nil
+	if err := s.WriteToDisk(); err != nil {
+		return err
 	}
 
-	// create empty event using provided name flag only and default values
-	e, err = u.New(entityName)
+	// update project metadata and write to disk
+	p.Modules[i].Subjects = append(m.Subjects, s)
+	if err := p.WriteMetadata(); err != nil {
+		return err
+	}
+
+	fmt.Printf("Event created: %s\n", s.Name)
+
+	if err := activitylog.Log(
+		p.ProjectDir(),
+		activitylog.ActionCreate,
+		string(subject.SubjectEvent),
+		s.Name,
+	); err != nil {
+		// non-fatal — log failure should never block subject creation
+		fmt.Fprintf(os.Stderr, "warning: could not write activity log: %v\n", err)
+	}
+
+	return nil
+}
+
+// Adds new event to Project Management / Tasks module
+func newTask(p *project.Project) error {
+	ss := project.ListSubjects(p, "")
+
+	i := slices.IndexFunc(p.Modules, func(m module.Module) bool {
+		return m.Type == module.ModuleProjectManagement
+	})
+	pmm := p.Modules[i]
+
+	j := slices.IndexFunc(pmm.Modules, func(m module.Module) bool {
+		return m.Type == module.ModuleTasks
+	})
+
+	m := pmm.Modules[j]
+
+	// Build initial subject that captures passed flags
+	is := subject.Subject{
+		Type: subject.SubjectTask,
+		Name: subjectName,
+		Date: subjectDate,
+	}
+
+	// module abs path defines where subject will reside
+	s, err := subject.SubjectFactory(is, m.AbsPath, ss)
 	if err != nil {
 		return err
 	}
-	y, _ := yaml.Marshal(e)
-	fmt.Printf("%s\n", y)
+
+	if err := s.WriteToDisk(); err != nil {
+		return err
+	}
+
+	// update project metadata and write to disk
+	p.Modules[i].Modules[j].Subjects = append(m.Subjects, s)
+	if err := p.WriteMetadata(); err != nil {
+		return err
+	}
+
+	fmt.Printf("Task created: %s\n", s.Name)
+
+	if err := activitylog.Log(
+		p.ProjectDir(),
+		activitylog.ActionCreate,
+		string(subject.SubjectEvent),
+		s.Name,
+	); err != nil {
+		// non-fatal — log failure should never block subject creation
+		fmt.Fprintf(os.Stderr, "warning: could not write activity log: %v\n", err)
+	}
+
+	return nil
+}
+
+// Adds new topic to Research / Topics module
+func newTopic(p *project.Project) error {
+	ss := project.ListSubjects(p, "")
+
+	i := slices.IndexFunc(p.Modules, func(m module.Module) bool {
+		return m.Type == module.ModuleResearch
+	})
+	pmm := p.Modules[i]
+
+	j := slices.IndexFunc(pmm.Modules, func(m module.Module) bool {
+		return m.Type == module.ModuleTopics
+	})
+
+	m := pmm.Modules[j]
+
+	// Build initial subject that captures passed flags
+	is := subject.Subject{
+		Type: subject.SubjectTopic,
+		Name: subjectName,
+		Date: subjectDate,
+	}
+
+	// module abs path defines where subject will reside
+	s, err := subject.SubjectFactory(is, m.AbsPath, ss)
+	if err != nil {
+		return err
+	}
+
+	if err := s.WriteToDisk(); err != nil {
+		return err
+	}
+
+	// update project metadata and write to disk
+	p.Modules[i].Modules[j].Subjects = append(m.Subjects, s)
+	if err := p.WriteMetadata(); err != nil {
+		return err
+	}
+
+	fmt.Printf("Topic created: %s\n", s.Name)
+
+	if err := activitylog.Log(
+		p.ProjectDir(),
+		activitylog.ActionCreate,
+		string(subject.SubjectEvent),
+		s.Name,
+	); err != nil {
+		// non-fatal — log failure should never block subject creation
+		fmt.Fprintf(os.Stderr, "warning: could not write activity log: %v\n", err)
+	}
+
+	return nil
+}
+
+// Adds new objective to Research / Objectives module
+func newObjective(p *project.Project) error {
+	ss := project.ListSubjects(p, "")
+
+	i := slices.IndexFunc(p.Modules, func(m module.Module) bool {
+		return m.Type == module.ModuleResearch
+	})
+	pmm := p.Modules[i]
+
+	j := slices.IndexFunc(pmm.Modules, func(m module.Module) bool {
+		return m.Type == module.ModuleObjectives
+	})
+
+	m := pmm.Modules[j]
+
+	// Build initial subject that captures passed flags
+	is := subject.Subject{
+		Type: subject.SubjectObjective,
+		Name: subjectName,
+		Date: subjectDate,
+	}
+
+	// module abs path defines where subject will reside
+	s, err := subject.SubjectFactory(is, m.AbsPath, ss)
+	if err != nil {
+		return err
+	}
+
+	if err := s.WriteToDisk(); err != nil {
+		return err
+	}
+
+	// update project metadata and write to disk
+	p.Modules[i].Modules[j].Subjects = append(m.Subjects, s)
+	if err := p.WriteMetadata(); err != nil {
+		return err
+	}
+
+	fmt.Printf("Objective created: %s\n", s.Name)
+
+	if err := activitylog.Log(
+		p.ProjectDir(),
+		activitylog.ActionCreate,
+		string(subject.SubjectEvent),
+		s.Name,
+	); err != nil {
+		// non-fatal — log failure should never block subject creation
+		fmt.Fprintf(os.Stderr, "warning: could not write activity log: %v\n", err)
+	}
 
 	return nil
 }

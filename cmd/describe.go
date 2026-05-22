@@ -7,24 +7,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var plain bool
+
 func init() {
-	descCmd.Flags().StringVarP(&pDir, "dest", "d", "/mnt/extra/onfly/testprj", "project directory")
+	descCmd.Flags().BoolVarP(&plain, "plain", "p", false, "output raw YAML for piping")
 	rootCmd.AddCommand(descCmd)
 }
 
 var descCmd = &cobra.Command{
-	Use:   "desc",
-	Short: "describes a project",
-	Long:  "describes a project and prints its metadata",
+	Use:   "describe",
+	Short: "Describes a project",
+	Long:  "Describes a project and prints its metadata",
 	Args:  cobra.NoArgs,
 	Run:   describe,
 }
 
 func describe(cmd *cobra.Command, args []string) {
-	p, err := project.Load(pDir)
+	p, err := project.Load(prjDir)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	p.Describe()
+	p.Describe(plain)
 }
