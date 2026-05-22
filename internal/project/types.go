@@ -4,6 +4,7 @@ import "github.com/hanymamdouh82/operatree/internal/module"
 
 const (
 	METADATA_FILE = "METADATA.yml"
+	ARCHIVED_DEST = "closed_tasks"
 )
 
 type Project struct {

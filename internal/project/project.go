@@ -69,6 +69,20 @@ func (p *Project) ModuleExists(name string) (module.Module, error) {
 	return p.Modules[midx], nil
 }
 
+// find module by type at root level only of the project
+func (p *Project) FindModuleByType(t module.ModuleType) (*module.Module, error) {
+
+	midx := slices.IndexFunc(p.Modules, func(m module.Module) bool {
+		return m.Type == t
+	})
+
+	if midx == -1 {
+		return &module.Module{}, fmt.Errorf("project doesn't contain module type %s", string(t))
+	}
+
+	return &p.Modules[midx], nil
+}
+
 // Archives a subject by moving to project Archive module
 func (p *Project) Archive(s subject.Subject) error {
 

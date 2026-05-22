@@ -14,10 +14,10 @@ import (
 func NewEvent(p *Project, subjectName, subjectDate string) error {
 	ss := ListSubjects(p, "")
 
-	i := slices.IndexFunc(p.Modules, func(m module.Module) bool {
-		return m.Type == module.ModuleEvents
-	})
-	m := p.Modules[i]
+	pmm, err := p.FindModuleByType(module.ModuleEvents)
+	if err != nil {
+		return fmt.Errorf("project template doesn't contain %s module", module.ModuleProjectManagement)
+	}
 
 	// Build initial subject that captures passed flags
 	is := subject.Subject{
@@ -27,7 +27,7 @@ func NewEvent(p *Project, subjectName, subjectDate string) error {
 	}
 
 	// module abs path defines where subject will reside
-	s, err := subject.SubjectFactory(is, m.AbsPath, ss)
+	s, err := subject.SubjectFactory(is, pmm.AbsPath, ss)
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func NewEvent(p *Project, subjectName, subjectDate string) error {
 	}
 
 	// update project metadata and write to disk
-	p.Modules[i].Subjects = append(m.Subjects, s)
+	pmm.Subjects = append(pmm.Subjects, s)
 	if err := p.WriteMetadata(); err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func NewEvent(p *Project, subjectName, subjectDate string) error {
 	if err := activitylog.Log(
 		p.ProjectDir(),
 		activitylog.ActionCreate,
-		string(subject.SubjectEvent),
+		string(s.Type),
 		s.Name,
 	); err != nil {
 		// non-fatal — log failure should never block subject creation
@@ -61,10 +61,10 @@ func NewEvent(p *Project, subjectName, subjectDate string) error {
 func NewTask(p *Project, subjectName, subjectDate string) error {
 	ss := ListSubjects(p, "")
 
-	i := slices.IndexFunc(p.Modules, func(m module.Module) bool {
-		return m.Type == module.ModuleProjectManagement
-	})
-	pmm := p.Modules[i]
+	pmm, err := p.FindModuleByType(module.ModuleProjectManagement)
+	if err != nil {
+		return fmt.Errorf("project template doesn't contain %s module", module.ModuleProjectManagement)
+	}
 
 	j := slices.IndexFunc(pmm.Modules, func(m module.Module) bool {
 		return m.Type == module.ModuleTasks
@@ -90,7 +90,7 @@ func NewTask(p *Project, subjectName, subjectDate string) error {
 	}
 
 	// update project metadata and write to disk
-	p.Modules[i].Modules[j].Subjects = append(m.Subjects, s)
+	pmm.Modules[j].Subjects = append(m.Subjects, s)
 	if err := p.WriteMetadata(); err != nil {
 		return err
 	}
@@ -100,7 +100,7 @@ func NewTask(p *Project, subjectName, subjectDate string) error {
 	if err := activitylog.Log(
 		p.ProjectDir(),
 		activitylog.ActionCreate,
-		string(subject.SubjectEvent),
+		string(s.Type),
 		s.Name,
 	); err != nil {
 		// non-fatal — log failure should never block subject creation
@@ -114,10 +114,10 @@ func NewTask(p *Project, subjectName, subjectDate string) error {
 func NewTopic(p *Project, subjectName, subjectDate string) error {
 	ss := ListSubjects(p, "")
 
-	i := slices.IndexFunc(p.Modules, func(m module.Module) bool {
-		return m.Type == module.ModuleResearch
-	})
-	pmm := p.Modules[i]
+	pmm, err := p.FindModuleByType(module.ModuleResearch)
+	if err != nil {
+		return fmt.Errorf("project template doesn't contain %s module", module.ModuleProjectManagement)
+	}
 
 	j := slices.IndexFunc(pmm.Modules, func(m module.Module) bool {
 		return m.Type == module.ModuleTopics
@@ -143,7 +143,7 @@ func NewTopic(p *Project, subjectName, subjectDate string) error {
 	}
 
 	// update project metadata and write to disk
-	p.Modules[i].Modules[j].Subjects = append(m.Subjects, s)
+	pmm.Modules[j].Subjects = append(m.Subjects, s)
 	if err := p.WriteMetadata(); err != nil {
 		return err
 	}
@@ -153,7 +153,7 @@ func NewTopic(p *Project, subjectName, subjectDate string) error {
 	if err := activitylog.Log(
 		p.ProjectDir(),
 		activitylog.ActionCreate,
-		string(subject.SubjectEvent),
+		string(s.Type),
 		s.Name,
 	); err != nil {
 		// non-fatal — log failure should never block subject creation
@@ -167,10 +167,10 @@ func NewTopic(p *Project, subjectName, subjectDate string) error {
 func NewObjective(p *Project, subjectName, subjectDate string) error {
 	ss := ListSubjects(p, "")
 
-	i := slices.IndexFunc(p.Modules, func(m module.Module) bool {
-		return m.Type == module.ModuleResearch
-	})
-	pmm := p.Modules[i]
+	pmm, err := p.FindModuleByType(module.ModuleResearch)
+	if err != nil {
+		return fmt.Errorf("project template doesn't contain %s module", module.ModuleProjectManagement)
+	}
 
 	j := slices.IndexFunc(pmm.Modules, func(m module.Module) bool {
 		return m.Type == module.ModuleObjectives
@@ -196,7 +196,7 @@ func NewObjective(p *Project, subjectName, subjectDate string) error {
 	}
 
 	// update project metadata and write to disk
-	p.Modules[i].Modules[j].Subjects = append(m.Subjects, s)
+	pmm.Modules[j].Subjects = append(m.Subjects, s)
 	if err := p.WriteMetadata(); err != nil {
 		return err
 	}
@@ -206,7 +206,7 @@ func NewObjective(p *Project, subjectName, subjectDate string) error {
 	if err := activitylog.Log(
 		p.ProjectDir(),
 		activitylog.ActionCreate,
-		string(subject.SubjectEvent),
+		string(s.Type),
 		s.Name,
 	); err != nil {
 		// non-fatal — log failure should never block subject creation

@@ -13,6 +13,14 @@ import (
 // `t` template name
 func Bootstrap(name string, bpth string, t string) (Project, error) {
 
+	if name == "" {
+		return Project{}, fmt.Errorf("project name is missing")
+	}
+
+	if bpth == "" {
+		return Project{}, fmt.Errorf("project bath is missing, either -d is missing value or init is not used")
+	}
+
 	// get template factory from templates map
 	tf, ok := templates[t]
 	if !ok {

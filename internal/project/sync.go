@@ -1,6 +1,7 @@
 package project
 
 import (
+	"log"
 	"path"
 
 	"github.com/hanymamdouh82/operatree/internal/filesystem"
@@ -27,12 +28,14 @@ func syncModule(m *module.Module) error {
 		b, err := filesystem.ReadFile(path.Join(s.DirName, subject.METADATA_FILE))
 		if err != nil {
 			// subject file missing or unreadable — skip, don't abort
+			log.Printf("missing yml for subject %s\n", s.DirName)
 			continue
 		}
 
 		var diskMeta subject.Subject
 		if err := yaml.Unmarshal(b, &diskMeta); err != nil {
 			// malformed yaml — skip, don't abort
+			log.Printf("malformed yml for subject %s\n", s.DirName)
 			continue
 		}
 

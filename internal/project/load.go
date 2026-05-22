@@ -16,7 +16,7 @@ func Load(pth string) (Project, error) {
 		return Project{}, err
 	}
 
-	// unmarsahl into loader struct, this is because Unit is an interface not a struct
+	// unmarshal into loader struct, this is because Unit is an interface not a struct
 	// then we can convert units as per build logic
 	var p Project
 	if err := yaml.Unmarshal(b, &p); err != nil {

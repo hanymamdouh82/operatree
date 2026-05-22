@@ -9,21 +9,20 @@ import (
 	"github.com/hanymamdouh82/operatree/internal/subject"
 )
 
-// Arhcive moves subject from its module to project's 99_ARCHIVE module.
+// Archive moves subject from its module to project's 99_ARCHIVE module.
 //
 // it confirm project includes 99_ARCHIVE module before moving.
 // It uses filesystem to move subject dir into archive module dir, then
 // removes the subject from the module subjects and updates project metadata.
 func Archive(p *Project, s subject.Subject) error {
 
-	// confifm project includes 99_ARCHIVE module
+	// confirm project includes 99_ARCHIVE module
 	ma, err := p.ModuleExists("99_ARCHIVE")
 	if err != nil {
 		return err
 	}
 
-	sdn := "closed_tasks"
-	an := path.Join(ma.AbsPath, sdn, s.Name)
+	an := path.Join(ma.AbsPath, ARCHIVED_DEST, s.Name)
 	if err := filesystem.Archive(s.DirName, an); err != nil {
 		return err
 	}

@@ -8,6 +8,10 @@ import (
 	"github.com/hanymamdouh82/operatree/internal/subject"
 )
 
+// cache for search DB. It is implemented so in future features if a function requires accessing search db more than
+// one time, we doesn't walk file system more than once.
+var CachedDB []SearchDB
+
 type SearchDB struct {
 	AbsPath    string
 	SearchStr  string
@@ -17,11 +21,19 @@ type SearchDB struct {
 }
 
 func BuildSearchDB(p *Project) []SearchDB {
+
+	// return from cache if already cached
+	if len(CachedDB) != 0 {
+		return CachedDB
+	}
+
 	db := []SearchDB{}
 	for _, m := range p.Modules {
 		db = append(db, walkModule(m, []string{})...)
 	}
-	return db
+
+	CachedDB = db
+	return CachedDB
 }
 
 func walkModule(m module.Module, path []string) []SearchDB {

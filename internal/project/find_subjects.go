@@ -33,6 +33,9 @@ func FindSubjects(p *Project, st string, term string) (subject.Subject, error) {
 	}
 
 	db := BuildSearchDB(p)
+	if len(db) == 0 {
+		return subject.Subject{}, fmt.Errorf("project doesn't contain any subjects yet")
+	}
 
 	// Optionally filter by type
 	if t != "" {
@@ -69,7 +72,7 @@ func FindSubjects(p *Project, st string, term string) (subject.Subject, error) {
 		}),
 	)
 	if err != nil {
-		return subject.Subject{}, nil
+		return subject.Subject{}, err
 	}
 
 	return db[idx].Subject, nil
