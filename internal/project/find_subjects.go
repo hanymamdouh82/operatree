@@ -51,15 +51,17 @@ func FindSubjects(p *Project, st string, term string) (subject.Subject, error) {
 	idx, err := fuzzyfinder.Find(
 		db,
 		func(i int) string {
-			display := fmt.Sprintf("%-10s  %-30s  %s > ",
+			// display := fmt.Sprintf("%-10s  %-30s  %s > ",
+			display := fmt.Sprintf("%-10s  %s > ",
 				string(db[i].Subject.Type),
 				db[i].Subject.Name,
-				db[i].Subject.DirName,
+				// db[i].Subject.DirName,
 			)
 			// pad display to fixed width, then append SearchStr for matching
 			// fuzzyfinder matches against the full string but only displays what fits the terminal
 			return fmt.Sprintf("%-120s  %s", display, db[i].SearchStr)
 		},
+		// fuzzyfinder.WithMode(fuzzyfinder.ModeCaseSensitive),
 		fuzzyfinder.WithQuery(term),
 		fuzzyfinder.WithHeader(fmt.Sprintf("Matching %s", t)),
 		fuzzyfinder.WithPromptString("Search subjects for > "),
