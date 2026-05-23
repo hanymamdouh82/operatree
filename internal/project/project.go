@@ -17,6 +17,7 @@ func (p *Project) ProjectName() string {
 
 // Returns base dir of the project. It is the dir where project resides
 func (p *Project) ProjectBaseDir() string {
+	// To-Do: remove name from base dir
 	return p.BaseDir
 }
 
@@ -24,7 +25,8 @@ func (p *Project) ProjectBaseDir() string {
 // Ex: /mnt/repos/porjects/my_project
 // never use baseDir property, always use reciever function whenever project path is required
 func (p *Project) ProjectDir() string {
-	return path.Join(p.BaseDir, p.Name)
+	// return path.Join(p.BaseDir, p.Name)
+	return p.BaseDir
 }
 
 // Prints project contents on stdout
