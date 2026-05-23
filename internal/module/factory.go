@@ -3,18 +3,16 @@ package module
 
 import (
 	"fmt"
-	"path"
 
 	"github.com/hanymamdouh82/operatree/internal/subject"
 )
 
-func FactoryAdmin(ppth string, prfx string) Module {
+func FactoryAdmin(prfx string) Module {
 
 	n := fmt.Sprintf("%s_%s", prfx, "ADMIN")
 	m := Module{
 		Type:     ModuleAdmin,
 		Name:     n,
-		AbsPath:  path.Join(ppth, n),
 		Modules:  []Module{},
 		Subjects: []subject.Subject{},
 		SubDirs: []string{
@@ -28,13 +26,12 @@ func FactoryAdmin(ppth string, prfx string) Module {
 	return m
 }
 
-func FactoryEvents(ppth string, prfx string) Module {
+func FactoryEvents(prfx string) Module {
 
 	n := fmt.Sprintf("%s_%s", prfx, "EVENTS")
 	m := Module{
 		Type:     ModuleEvents,
 		Name:     n,
-		AbsPath:  path.Join(ppth, n),
 		Modules:  []Module{},
 		Subjects: []subject.Subject{},
 		SubDirs:  []string{},
@@ -43,18 +40,16 @@ func FactoryEvents(ppth string, prfx string) Module {
 	return m
 }
 
-func FactoryProjectManagement(ppth string, prfx string) Module {
+func FactoryProjectManagement(prfx string) Module {
 
 	n := fmt.Sprintf("%s_%s", prfx, "PROJECT_MANAGEMENT")
 	m := Module{
-		Type:    ModuleProjectManagement,
-		Name:    n,
-		AbsPath: path.Join(ppth, n),
+		Type: ModuleProjectManagement,
+		Name: n,
 		Modules: []Module{
 			{
 				Type:     ModuleTasks,
 				Name:     "01_TASKS",
-				AbsPath:  path.Join(ppth, n, "01_TASKS"),
 				Modules:  []Module{},
 				Subjects: []subject.Subject{},
 				SubDirs:  []string{},
@@ -74,13 +69,12 @@ func FactoryProjectManagement(ppth string, prfx string) Module {
 }
 
 // Legal module
-func FactoryLegal(ppth string, prfx string) Module {
+func FactoryLegal(prfx string) Module {
 
 	n := fmt.Sprintf("%s_%s", prfx, "LEGAL")
 	m := Module{
 		Type:     ModuleLegal,
 		Name:     n,
-		AbsPath:  path.Join(ppth, n),
 		Modules:  []Module{},
 		Subjects: []subject.Subject{},
 		SubDirs: []string{
@@ -96,18 +90,16 @@ func FactoryLegal(ppth string, prfx string) Module {
 }
 
 // Research module, basically it is a collection of submodules
-func FactoryResearch(ppth string, prfx string) Module {
+func FactoryResearch(prfx string) Module {
 
 	n := fmt.Sprintf("%s_%s", prfx, "RESEARCH")
 	m := Module{
-		Type:    ModuleResearch,
-		Name:    n,
-		AbsPath: path.Join(ppth, n),
+		Type: ModuleResearch,
+		Name: n,
 		Modules: []Module{
 			{
 				Type:     ModuleIndex,
 				Name:     "00_INDEX",
-				AbsPath:  path.Join(ppth, n, "00_INDEX"),
 				Modules:  []Module{},
 				Subjects: []subject.Subject{},
 				SubDirs:  []string{},
@@ -115,7 +107,6 @@ func FactoryResearch(ppth string, prfx string) Module {
 			{
 				Type:     ModuleTopics,
 				Name:     "01_TOPICS",
-				AbsPath:  path.Join(ppth, n, "01_TOPICS"),
 				Modules:  []Module{},
 				Subjects: []subject.Subject{},
 				SubDirs:  []string{},
@@ -123,7 +114,6 @@ func FactoryResearch(ppth string, prfx string) Module {
 			{
 				Type:     ModuleObjectives,
 				Name:     "02_OBJECTIVES",
-				AbsPath:  path.Join(ppth, n, "02_OBJECTIVES"),
 				Modules:  []Module{},
 				Subjects: []subject.Subject{},
 				SubDirs:  []string{},
@@ -131,7 +121,6 @@ func FactoryResearch(ppth string, prfx string) Module {
 			{
 				Type:     ModuleSummaries,
 				Name:     "03_SUMMARIES",
-				AbsPath:  path.Join(ppth, n, "03_SUMMARIES"),
 				Modules:  []Module{},
 				Subjects: []subject.Subject{},
 				SubDirs:  []string{},
@@ -139,7 +128,6 @@ func FactoryResearch(ppth string, prfx string) Module {
 			{
 				Type:     ModuleReferences,
 				Name:     "04_REFERENCES",
-				AbsPath:  path.Join(ppth, n, "04_REFERENCES"),
 				Modules:  []Module{},
 				Subjects: []subject.Subject{},
 				SubDirs: []string{
@@ -153,7 +141,6 @@ func FactoryResearch(ppth string, prfx string) Module {
 			{
 				Type:     ModuleAudioNotes,
 				Name:     "05_AUDIO_NOTES",
-				AbsPath:  path.Join(ppth, n, "05_AUDIO_NOTES"),
 				Modules:  []Module{},
 				Subjects: []subject.Subject{},
 				SubDirs: []string{
@@ -165,7 +152,6 @@ func FactoryResearch(ppth string, prfx string) Module {
 			{
 				Type:     ModuleAttachements,
 				Name:     "06_ATTACHEMENTS",
-				AbsPath:  path.Join(ppth, n, "06_ATTACHEMENTS"),
 				Modules:  []Module{},
 				Subjects: []subject.Subject{},
 				SubDirs:  []string{},
@@ -179,13 +165,12 @@ func FactoryResearch(ppth string, prfx string) Module {
 }
 
 // Engineering module
-func FactoryEngineering(ppth string, prfx string) Module {
+func FactoryEngineering(prfx string) Module {
 
 	n := fmt.Sprintf("%s_%s", prfx, "ENGINEERING")
 	m := Module{
 		Type:     ModuleEngineering,
 		Name:     n,
-		AbsPath:  path.Join(ppth, n),
 		Modules:  []Module{},
 		Subjects: []subject.Subject{},
 		SubDirs: []string{
@@ -206,18 +191,16 @@ func FactoryEngineering(ppth string, prfx string) Module {
 // Although subdirs looks like modules; they are actually non-managed modules
 // Sources is a sub-module, since it will be controlled from CLI and it has metadata to index Sources
 // and ensure they are searchable
-func FactoryData(ppth string, prfx string) Module {
+func FactoryData(prfx string) Module {
 
 	n := fmt.Sprintf("%s_%s", prfx, "DATA")
 	m := Module{
-		Type:    ModuleData,
-		Name:    n,
-		AbsPath: path.Join(ppth, n),
+		Type: ModuleData,
+		Name: n,
 		Modules: []Module{
 			{
 				Type:     ModuleDataSources,
 				Name:     "00_SOURCES",
-				AbsPath:  path.Join(ppth, n, "00_SOURCES"),
 				Modules:  []Module{},
 				Subjects: []subject.Subject{},
 				SubDirs:  []string{},
@@ -239,13 +222,12 @@ func FactoryData(ppth string, prfx string) Module {
 }
 
 // Media Library module
-func FactoryMediaLib(ppth string, prfx string) Module {
+func FactoryMediaLib(prfx string) Module {
 
 	n := fmt.Sprintf("%s_%s", prfx, "MEDIA_LIBRARY")
 	m := Module{
 		Type:     ModuleMediaLibrary,
 		Name:     n,
-		AbsPath:  path.Join(ppth, n),
 		Modules:  []Module{},
 		Subjects: []subject.Subject{},
 		SubDirs: []string{
@@ -261,13 +243,12 @@ func FactoryMediaLib(ppth string, prfx string) Module {
 }
 
 // Deliverables
-func FactoryDeliverables(ppth string, prfx string) Module {
+func FactoryDeliverables(prfx string) Module {
 
 	n := fmt.Sprintf("%s_%s", prfx, "DELIVERABLES")
 	m := Module{
 		Type:     ModuleDeliverables,
 		Name:     n,
-		AbsPath:  path.Join(ppth, n),
 		Modules:  []Module{},
 		Subjects: []subject.Subject{},
 		SubDirs: []string{
@@ -282,13 +263,12 @@ func FactoryDeliverables(ppth string, prfx string) Module {
 }
 
 // Publications
-func FactoryPublications(ppth string, prfx string) Module {
+func FactoryPublications(prfx string) Module {
 
 	n := fmt.Sprintf("%s_%s", prfx, ModulePublications)
 	m := Module{
 		Type:     ModulePublications,
 		Name:     n,
-		AbsPath:  path.Join(ppth, n),
 		Modules:  []Module{},
 		Subjects: []subject.Subject{},
 		SubDirs: []string{
@@ -303,13 +283,12 @@ func FactoryPublications(ppth string, prfx string) Module {
 
 // Archive module, just an empty dir. It is managed by special CLI command `archive` that moves
 // any file to the archive dir
-func FactoryArchive(ppth string, prfx string) Module {
+func FactoryArchive(prfx string) Module {
 
 	n := fmt.Sprintf("%s_%s", prfx, "ARCHIVE")
 	m := Module{
 		Type:     ModuleArchive,
 		Name:     n,
-		AbsPath:  path.Join(ppth, n),
 		Modules:  []Module{},
 		Subjects: []subject.Subject{},
 		SubDirs: []string{

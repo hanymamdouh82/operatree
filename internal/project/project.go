@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path"
 	"slices"
+	"strings"
 
 	"github.com/hanymamdouh82/operatree/internal/filesystem"
 	"github.com/hanymamdouh82/operatree/internal/module"
@@ -17,8 +18,8 @@ func (p *Project) ProjectName() string {
 
 // Returns base dir of the project. It is the dir where project resides
 func (p *Project) ProjectBaseDir() string {
-	// To-Do: remove name from base dir
-	return p.BaseDir
+	bd := strings.TrimSuffix(p.absDir, p.Name)
+	return bd
 }
 
 // Returns full project path including project name.
@@ -26,7 +27,7 @@ func (p *Project) ProjectBaseDir() string {
 // never use baseDir property, always use reciever function whenever project path is required
 func (p *Project) ProjectDir() string {
 	// return path.Join(p.BaseDir, p.Name)
-	return p.BaseDir
+	return p.absDir
 }
 
 // Prints project contents on stdout

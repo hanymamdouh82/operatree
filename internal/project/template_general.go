@@ -13,17 +13,18 @@ func tmpltGeneral(name string, bpth string) Project {
 	ppth := path.Join(bpth, name)
 
 	p := Project{
-		Name:    name,
-		BaseDir: bpth,
+		Name: name,
 		Modules: []module.Module{
-			module.FactoryAdmin(ppth, "00"),
-			module.FactoryEvents(ppth, "01"),
-			module.FactoryProjectManagement(ppth, "02"),
-			module.FactoryMediaLib(ppth, "03"),
-			module.FactoryDeliverables(ppth, "04"),
-			module.FactoryArchive(ppth, "99"),
+			module.FactoryAdmin("00"),
+			module.FactoryEvents("01"),
+			module.FactoryProjectManagement("02"),
+			module.FactoryMediaLib("03"),
+			module.FactoryDeliverables("04"),
+			module.FactoryArchive("99"),
 		},
 	}
+
+	hydratePath(ppth, &p)
 
 	return p
 }

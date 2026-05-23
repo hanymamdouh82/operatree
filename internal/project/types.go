@@ -17,7 +17,7 @@ const (
 type Project struct {
 	Name     string          `yaml:"name"`
 	Template string          `yaml:"template"`
-	BaseDir  string          `yaml:"-"`
+	absDir   string          `yaml:"-"` // project absolute directory, hydrated during load
 	Tags     []string        `yaml:"tags"`
 	Modules  []module.Module `yaml:"modules"`
 

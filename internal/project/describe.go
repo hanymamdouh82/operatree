@@ -17,7 +17,7 @@ func describeProject(p *Project) {
 	b.WriteString(ui.AnsiGray + strings.Repeat("─", 40) + ui.AnsiReset + "\n\n")
 
 	// Core fields
-	b.WriteString(label("BaseDir") + "  " + value(p.BaseDir) + "\n")
+	b.WriteString(label("BaseDir") + "  " + value(p.ProjectBaseDir()) + "\n")
 	if len(p.Tags) > 0 {
 		tags := make([]string, len(p.Tags))
 		for i, t := range p.Tags {

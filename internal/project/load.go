@@ -4,7 +4,6 @@ import (
 	"os"
 	"path"
 
-	"github.com/hanymamdouh82/operatree/internal/module"
 	"gopkg.in/yaml.v3"
 )
 
@@ -27,25 +26,4 @@ func Load(pth string) (Project, error) {
 	hydratePath(pth, &p)
 
 	return p, err
-}
-
-func hydratePath(projectBaseDir string, p *Project) {
-	p.BaseDir = projectBaseDir
-	for i := range p.Modules {
-		hydrateModule(projectBaseDir, &p.Modules[i])
-	}
-}
-
-func hydrateModule(projectBaseDir string, m *module.Module) {
-
-	// hydrate module abs path
-	m.AbsPath = path.Join(projectBaseDir, m.Name)
-
-	for i, s := range m.Subjects {
-		m.Subjects[i].DirName = path.Join(projectBaseDir, m.Name, s.Name)
-	}
-
-	for i := range m.Modules {
-		hydrateModule(projectBaseDir, &m.Modules[i])
-	}
 }
