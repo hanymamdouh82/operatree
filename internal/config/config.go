@@ -16,7 +16,7 @@ func configDir() (string, error) {
 	// Respect XDG_HOME_CONFIG as first-class
 	// This is a response for Github Issue
 	// https://github.com/hanymamdouh82/operatree/issues/2
-	xdgHome := os.Getenv("XDG_HOME_CONFIG")
+	xdgHome := os.Getenv("XDG_CONFIG_HOME")
 	if xdgHome != "" {
 		return filepath.Join(xdgHome, "operatree"), nil
 	}

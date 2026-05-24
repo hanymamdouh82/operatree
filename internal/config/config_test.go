@@ -6,7 +6,7 @@ import (
 )
 
 func TestConfigDirXDG(t *testing.T) {
-	os.Setenv("XDG_HOME_CONFIG", "/home/user/myconfig")
+	os.Setenv("XDG_CONFIG_HOME", "/home/user/myconfig")
 	want := "/home/user/myconfig/operatree"
 
 	gotDir, gotErr := configDir()
