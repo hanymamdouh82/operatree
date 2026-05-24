@@ -8,12 +8,13 @@
 2. [High-Level Architecture](#high-level-architecture)
 3. [Package Organization](#package-organization)
 4. [Data Flow & Request Lifecycle](#data-flow--request-lifecycle)
-5. [Core Concepts](#core-concepts)
-6. [Package Deep Dives](#package-deep-dives)
-7. [Adding New Features](#adding-new-features)
-8. [Common Patterns](#common-patterns)
-9. [Testing Strategy](#testing-strategy)
-10. [Troubleshooting Guide](#troubleshooting-guide)
+5. [Path Resolution & Project Directory Selection](#path-resolution--project-directory-selection)
+6. [Core Concepts](#core-concepts)
+7. [Package Deep Dives](#package-deep-dives)
+8. [Adding New Features](#adding-new-features)
+9. [Common Patterns](#common-patterns)
+10. [Testing Strategy](#testing-strategy)
+11. [Troubleshooting Guide](#troubleshooting-guide
 
 ---
 
@@ -207,6 +208,80 @@ Subject Type (CLI)    Subject Type (Internal)    Module Type (Storage)
 ```
 
 **Mapping Logic:** `internal/project/types.go :: SubjectModuleMap`
+
+---
+
+## 🆕 Path Resolution & Portability
+
+### Universal `-d` Project Directory Flag
+
+All OperaTree commands now support the `-d` (or `--dest`) flag, which specifies the project directory to operate on. This makes every operation—creation, querying, mutation, etc.—flexible and scriptable.
+
+- If `-d` is passed, the specified directory is used.
+- If not, OperaTree’s standard resolution applies:
+  1. If the current directory is a project (contains `METADATA.yml`), it is used.
+  2. If a default project is set in the config, it is used.
+  3. If neither, a descriptive error is raised.
+
+**Example:**
+
+```bash
+operatree new event -d ~/work/reports/sales-2026
+```
+
+---
+
+### No Absolute Paths in Metadata or Config
+
+OperaTree **never stores absolute paths** in its project metadata, config YAML, or subject files. Instead:
+
+- All project locations in config are stored as names (and relative paths if needed).
+- On every command execution, the actual absolute path is “hydrated” at runtime,
+  based on the user’s context and the `-d` (or default) directory chosen.
+- This approach ensures:
+  - Portability: Projects can be moved, copied, or checked out across filesystems/machines without breaking links or config.
+  - Forward compatibility with sync and backup tools, as well as future cloud/distributed features.
+
+---
+
+### Project Loading & Path Hydration
+
+**Workflow:**
+
+1. CLI parses `-d` (or uses default/current directory)
+2. Project loader builds the absolute path at runtime.
+3. All internal operations use the hydrated path—never anything persisted or cached.
+4. When a project is moved, no config editing required; just pass the new directory with `-d` (or `cd` into it).
+
+**Key Note:**
+
+- If the structure or location of the project directory changes, **all commands will continue to work** as long as `-d` is pointed to the right directory.
+- This also applies to all tracked projects in config; tracking is done by name and relative structure, not by absolute path.
+
+---
+
+### Sample: Command & Data Flow
+
+```ascii
+User Command: operatree summary -d /mnt/external/myproject
+│
+├─ rootCmd parses -d flag → actDir is set
+│
+├─ project.Load(actDir) → computes absolute path at runtime, hydrates structs
+│
+├─ All downstream business logic and file I/O use this hydrated absolute path
+│
+└─ No absolute path is ever written to config or disk; runtime only.
+```
+
+---
+
+### Why This Matters
+
+- You can move/copy/sync your projects across devices or folders at will.
+- Collaborators can use different base directories & everything still works.
+- Config/backups are clean, lightweight, and future-proof.
+- Your data always belongs to you; location is context, not identity.
 
 ---
 
