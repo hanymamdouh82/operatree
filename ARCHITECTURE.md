@@ -70,7 +70,7 @@ OperaTree is built on three foundational pillars:
 ┌──────────────────▼───────────────────────────────┐
 │            Operating System                      │
 │         (Filesystem, File I/O)                   │
-└────────────────────────────────────────��─────────┘
+└──────────────────────────────────────────────────┘
 ```
 
 ### Component Relationships
@@ -238,7 +238,7 @@ User Input: operatree new event --name "Cairo Visit" --date "2026-05-22" -d ~/my
 
 ```
 CLI Argument          Internal Constant     Storage Module Type
-─────────────         ─────────────────     ───────��───────────
+─────────────         ─────────────────     ───────────────────
 "event"    (lower)  → SubjectEvent("EVENT") → ModuleEvents
 "task"     (lower)  → SubjectTask("TASK")   → ModuleTasks
 "topic"    (lower)  → SubjectTopic("TOPIC") → ModuleTopics
@@ -265,8 +265,8 @@ func init() {
 }
 
 func newSubject(cmd *cobra.Command, args []string) {
-    a := args[0]           // "event" from CLI
-    st := strings.ToUpper(a)  // "EVENT"
+    a := args[0]                              // "event" from CLI
+    st := strings.ToUpper(a)                  // "EVENT"
     
     // Convert to SubjectType constant
     if err := project.NewSubject(&p, subjectName, subjectDate, subject.SubjectType(st)); err != nil {
@@ -286,7 +286,7 @@ var SubjectModuleMap = map[subject.SubjectType]module.ModuleType{
 }
 ```
 
-**Key Advantage:** When you add a new subject type, the CLI command automatically recognizes it without code changes!
+**Key Advantage:** When you add a new subject type, the CLI command automatically recognizes it without code changes to the new command!
 
 ---
 
@@ -889,7 +889,7 @@ timestamp                 action    type        name                      user@h
 
 **Key Operations:**
 
-- `Log(projectRoot, action, subjectType, subjectName)` — Record action
+- `Log(projectRoot, action, subjectType, subjectName)` �� Record action
 - `AppVersion` — Set from main.go build flags
 
 **Design:** Append-only, pipe-friendly for Unix integration (can be piped to `grep`, `cut`, `awk`, etc.)
@@ -952,7 +952,6 @@ operatree new event --name "Cairo Visit" --date "2026-05-22"
 ```go
 func init() {
     // 1. DYNAMICALLY build valid subjects from SubjectModuleMap
-    validSubjects = []cobra.Completion{}
     for k := range project.SubjectModuleMap {
         sn := strings.ToLower(string(k))
         validSubjects = append(validSubjects, sn)
@@ -988,7 +987,7 @@ func newSubject(cmd *cobra.Command, args []string) {
     p, err := project.Load(actDir)
     if err != nil { log.Fatal(err) }
     
-    // Pass to business logic
+    // Pass to business logic - no mapping needed, direct type creation
     if err := project.NewSubject(&p, subjectName, subjectDate, subject.SubjectType(st)); err != nil {
         log.Fatal(err)
     }
@@ -1252,7 +1251,7 @@ var SubjectModuleMap = map[subject.SubjectType]module.ModuleType{
 }
 ```
 
-**That's it!** The CLI will automatically recognize the new subject type because `cmd/new.go` dynamically loads from `project.SubjectModuleMap`.
+**That's it!** The CLI will automatically recognize the new subject type because `cmd/new.go` dynamically loads from `project.SubjectModuleMap`. No changes needed to the `new` command!
 
 **Step 4: Optional - Add Interactive Mode** (`internal/subject/interactive.go`):
 
