@@ -15,7 +15,7 @@ func init() {
 	rootCmd.AddCommand(showCmd)
 }
 
-var va = []cobra.Completion{"tracked", "config", "templates"}
+var va = []cobra.Completion{"tracked", "config", "templates", "default"}
 
 var showCmd = &cobra.Command{
 	Use:       fmt.Sprintf("show [%s]", strings.Join(va, " | ")),
@@ -45,6 +45,9 @@ func show(cmd *cobra.Command, args []string) {
 		fmt.Printf("%s\n", b)
 	case va[2]:
 		template.ListTemplates()
+		return
+	case va[3]:
+		config.ShowDefulatProject()
 		return
 	default:
 		log.Fatal("unknow command")
