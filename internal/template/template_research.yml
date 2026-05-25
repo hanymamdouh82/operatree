@@ -1,5 +1,5 @@
 ---
-name: dev
+name: research
 description: for academic work, R&D, and analytical projects.
 modules:
   - type: admin
