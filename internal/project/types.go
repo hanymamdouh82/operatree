@@ -25,7 +25,7 @@ type Project struct {
 }
 
 // project templates map
-type tmpltMap map[string]func(name string, bpth string) Project
+type tmpltMap map[string]func(name string) Project
 
 var Templates tmpltMap = tmpltMap{
 	TMPLT_GENERAL:   tmpltGeneral,

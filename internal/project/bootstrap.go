@@ -2,6 +2,7 @@ package project
 
 import (
 	"fmt"
+	"path"
 
 	"github.com/hanymamdouh82/operatree/internal/config"
 	"github.com/hanymamdouh82/operatree/internal/filesystem"
@@ -26,8 +27,14 @@ func Bootstrap(name string, bpth string, t string) (Project, error) {
 	if !ok {
 		return Project{}, fmt.Errorf("undefined template")
 	}
-	np := tf(name, bpth)
+	np := tf(name)
 	np.Template = t
+
+	// path hydration:
+	// Walk project, subjects, modules, nested modules and injects AbsPath, DirName
+	// It is crucial to hydrate at runtime to comply with relative-path requirememnts
+	ppth := path.Join(bpth, name)
+	hydratePath(ppth, &np)
 
 	// create project dir
 	if err := filesystem.CreateDir(np.ProjectDir()); err != nil {

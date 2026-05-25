@@ -1,16 +1,11 @@
 package project
 
 import (
-	"path"
-
 	"github.com/hanymamdouh82/operatree/internal/module"
 )
 
 // returns Dev project template
-// `bpth` is the abs base dir for the project, without project name included into it
-func tmpltResearch(name string, bpth string) Project {
-
-	ppth := path.Join(bpth, name)
+func tmpltResearch(name string) Project {
 
 	p := Project{
 		Name: name,
@@ -23,7 +18,6 @@ func tmpltResearch(name string, bpth string) Project {
 			module.FactoryArchive("99"),
 		},
 	}
-	hydratePath(ppth, &p)
 
 	return p
 }
