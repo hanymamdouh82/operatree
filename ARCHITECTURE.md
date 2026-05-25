@@ -544,16 +544,6 @@ type Module struct {
 }
 ```
 
-**Factory Functions:**
-
-```go
-// Templates create module hierarchies
-module.FactoryAdmin(prefix)      // Creates 00_ADMIN
-module.FactoryEvents(prefix)     // Creates 01_EVENTS
-module.FactoryProjectManagement(projectPath)  // Creates 02_PROJECT_MANAGEMENT with Tasks submodule
-// ... etc
-```
-
 **Key Operations:**
 
 - `Bootstrap()` — Create module directories
@@ -708,20 +698,7 @@ var argToSubject map[string]subject.SubjectType = map[string]subject.SubjectType
 }
 ```
 
-4. **Add Module Template** (`internal/module/factory.go`):
-
-```go
-func FactoryMyModule(projectPath, prefix string) Module {
-    return Module{
-        Name: fmt.Sprintf("%s_MYMODULE", prefix),
-        Type: ModuleMyModule,
-        Subjects: []Subject{},
-        Modules: []Module{},
-    }
-}
-```
-
-5. **Update Project Templates** (`internal/project/template_dev.go`):
+4. **Update Project Templates** (`internal/templates/template_dev.go`):
 
 ```go
 p := Project{
@@ -733,7 +710,7 @@ p := Project{
 }
 ```
 
-6. **Test it:**
+5. **Test it:**
 
 ```bash
 operatree new mytype --name "My New Type"
