@@ -40,8 +40,8 @@ func formatPreview(s subject.Subject) string {
 	if s.Status != "" {
 		b.WriteString(label("Status    ") + value(s.Status) + "\n")
 	}
-	if len(s.Paricipants) > 0 {
-		b.WriteString(label("People    ") + value(strings.Join(s.Paricipants, ", ")) + "\n")
+	if len(s.Participants) > 0 {
+		b.WriteString(label("People    ") + value(strings.Join(s.Participants, ", ")) + "\n")
 	}
 
 	// Tags

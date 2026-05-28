@@ -42,7 +42,7 @@ func walkModule(m module.Module, path []string) []SearchDB {
 	currentPath = append(currentPath, m.Name)
 
 	for j, s := range m.Subjects {
-		a := slices.Concat(s.Tags, s.Paricipants)
+		a := slices.Concat(s.Tags, s.Participants)
 		a = append(a, s.Name)
 		a = append(a, s.Notes)
 		a = append(a, s.Date)
