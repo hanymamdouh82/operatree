@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 permissions:
   contents: write
@@ -54,10 +54,13 @@ jobs:
           VERSION=$(git describe --tags --always)
           COMMIT=$(git rev-parse --short HEAD)
           DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          PKG=github.com/hanymamdouh82/operatree
+
+          echo "Version: $VERSION"
+          echo "Commit:  $COMMIT"
+          echo "Date:    $DATE"
 
           go build \
-            -ldflags "-X '$PKG.Version=$VERSION' -X '$PKG.Commit=$COMMIT' -X '$PKG.BuildDate=$DATE'" \
+            -ldflags "-X 'main.Version=$VERSION' -X 'main.Commit=$COMMIT' -X 'main.BuildDate=$DATE'" \
             -o ${{ matrix.asset_name }} \
             .
 
