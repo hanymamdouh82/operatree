@@ -3,7 +3,7 @@
 > Your project operating system — built on your filesystem.
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-[![Go Version](https://img.shields.io/badge/go-1.21+-00ADD8.svg)](https://golang.org)
+[![Go Version](https://img.shields.io/badge/go-1.26+-00ADD8.svg)](https://golang.org)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)]()
 
 OperaTree is a CLI tool that brings structure, searchability, and intelligence to how you manage projects — using your filesystem and plain YAML as the only storage. No database required. No vendor lock-in. No proprietary formats.
@@ -51,6 +51,8 @@ your-project/
 
 Each subject (event, task, topic, objective) lives in its own directory with a `META.yaml` file that makes it searchable, filterable, and machine-readable.
 
+> **Note:** All directory and file names are case-sensitive, including on Windows. `01_EVENTS` and `01_events` are different paths. Always use the exact casing shown above.
+
 ---
 
 ## Features
@@ -74,7 +76,41 @@ Each subject (event, task, topic, objective) lives in its own directory with a `
 
 ## Installation
 
+### Linux / macOS
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/hanymamdouh82/operatree/main/install.sh | sh
+```
+
+No tools required beyond `curl`. The script auto-detects your OS and architecture, downloads the right binary, and installs it to `/usr/local/bin`.
+
+### Windows
+
+Open PowerShell and run:
+
+```powershell
+irm https://raw.githubusercontent.com/hanymamdouh82/operatree/main/install.ps1 | iex
+```
+
+No tools required. Installs to `%USERPROFILE%\bin` and adds it to your PATH automatically. Restart your terminal after installation.
+
+### Manual download
+
+Download the binary for your platform directly from the [Releases page](https://github.com/hanymamdouh82/operatree/releases):
+
+| File                          | Platform                       |
+| ----------------------------- | ------------------------------ |
+| `operatree-linux-amd64`       | Linux x86-64                   |
+| `operatree-linux-arm64`       | Linux ARM (Raspberry Pi, etc.) |
+| `operatree-darwin-amd64`      | macOS Intel                    |
+| `operatree-darwin-arm64`      | macOS Apple Silicon            |
+| `operatree-windows-amd64.exe` | Windows x86-64                 |
+
+Rename the downloaded file to `operatree` (or `operatree.exe` on Windows) and place it in a directory on your `PATH`.
+
 ### From source
+
+Requires Go 1.26 or higher.
 
 ```bash
 git clone https://github.com/hanymamdouh82/operatree.git
@@ -83,12 +119,6 @@ make install
 ```
 
 Installs to `/usr/local/bin` on Linux and macOS. May prompt for `sudo` if the directory is not writable.
-
-### Using go install
-
-```bash
-go install github.com/hanymamdouh82/operatree@latest
-```
 
 ---
 
@@ -114,7 +144,7 @@ Creates the full directory structure and registers the project in config. Prompt
 
 ```bash
 operatree default           # pick from tracked projects interactively
-operatree default --show    # show current default
+operatree show default      # show current default
 ```
 
 Once set, all commands use it automatically — no `-d` flag needed.
@@ -166,7 +196,7 @@ operatree explain                 # directory philosophy guide
 
 ```bash
 operatree track                   # add current directory project to tracked list
-operatree untrack                 # remove current directory project from tracked list
+operatree untrack <project_name>  # remove current directory project from tracked list
 ```
 
 ---
@@ -177,6 +207,7 @@ operatree untrack                 # remove current directory project from tracke
 | ---------------------------------- | ------------------------------------------------------------------------ |
 | `operatree init`                   | Initialize OperaTree configuration                                       |
 | `operatree bootstrap [name]`       | Bootstrap a new project                                                  |
+| `operatree show [entity]`          | Create a new subject interactively                                       |
 | `operatree new [type]`             | Create a new subject interactively                                       |
 | `operatree find [type] [term]`     | Fuzzy-find subjects across all metadata                                  |
 | `operatree metadata [type] [term]` | Find a subject and open its metadata in editor                           |
@@ -184,7 +215,7 @@ operatree untrack                 # remove current directory project from tracke
 | `operatree archive [type] [term]`  | Find a subject and archives its directory in 99_ARCHIVE module directory |
 | `operatree sync`                   | Sync project metadata with subject files on disk                         |
 | `operatree track`                  | Add current project to tracked list                                      |
-| `operatree untrack`                | Remove current project from tracked list                                 |
+| `operatree untrack [name]`         | Remove current project from tracked list                                 |
 | `operatree default`                | Set default project interactively                                        |
 | `operatree desc`                   | Describe project structure                                               |
 | `operatree summary`                | Project summary with counts and status                                   |
@@ -198,7 +229,6 @@ operatree untrack                 # remove current directory project from tracke
 | `-d, --dest`     | all         | Override project directory                      |
 | `-t, --template` | `bootstrap` | define project template                         |
 | `--plain`        | `desc`      | Output raw YAML instead of styled view          |
-| `--show`         | `default`   | Show current default project                    |
 | `--name`         | `new`       | Sets name for subject and skips interactive CLI |
 | `--date`         | `new`       | Sets date for subject and skips interactive CLI |
 | `-v, --verbose`  | `bootstrap` | Print project structure after creation          |
@@ -360,14 +390,14 @@ Native integration with file watchers and version control backends is on the roa
 
 OperaTree is in active development. The foundation is filesystem-first and stable. Future layers will be built on top without breaking it.
 
-| Phase                       | Description                                                                     | Status     |
-| --------------------------- | ------------------------------------------------------------------------------- | ---------- |
-| CLI                         | Filesystem engine, YAML metadata, fuzzy search, interactive forms, activity log | 🚧 Alpha   |
-| Version control integration | Native watchexec/git hooks, configurable watcher and action backends            | 📋 Planned |
-| Index sidecar               | SQLite mirror for fast queries, no filesystem writes                            | 📋 Planned |
-| Daemon                      | API over the index, sync engine, configuration-driven engine selection          | 📋 Planned |
-| Semantic search             | Embeddings and vector search over subject metadata, and contents (with Daemon)  | 📋 Planned |
-| Web platform                | Multi-user, web UI, enterprise features (commercial)                            | 💡 Vision  |
+| Phase                       | Description                                                                     | Status         |
+| --------------------------- | ------------------------------------------------------------------------------- | -------------- |
+| CLI                         | Filesystem engine, YAML metadata, fuzzy search, interactive forms, activity log | 🚧 Alpha       |
+| Version control integration | Native watchexec/git hooks, configurable watcher and action backends            | 📋 Planned     |
+| Index sidecar               | SQLite mirror for fast queries, no filesystem writes                            | 📋 Planned     |
+| Daemon                      | API over the index, sync engine, configuration-driven engine selection          | 📋 Planned     |
+| Semantic search             | Embeddings and vector search over subject metadata, and contents (with Daemon)  | 📋 In-Progress |
+| Web platform                | Multi-user, web UI, enterprise features (commercial)                            | 💡 Vision      |
 
 ---
 
