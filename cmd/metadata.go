@@ -29,6 +29,9 @@ func editMetadata(cmd *cobra.Command, args []string) {
 		term = args[1]
 	} else if len(args) == 1 {
 		term = args[0]
+	} else {
+		t = ""
+		term = ""
 	}
 
 	p, err := project.Load(actDir)
@@ -37,10 +40,6 @@ func editMetadata(cmd *cobra.Command, args []string) {
 	}
 
 	if err := project.EditMetadata(&p, t, term); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := project.Sync(&p); err != nil {
 		log.Fatal(err)
 	}
 }
