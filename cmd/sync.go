@@ -7,8 +7,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var confirmSync bool
+
 func init() {
 	syncCmd.Flags().StringVarP(&destDir, "dest", "d", actDir, dFlagHelp_project)
+	syncCmd.Flags().BoolVarP(&confirmSync, "yes", "y", false, "confirm and apply sync changes")
 	syncCmd.PreRun = resolveProjectDir
 	rootCmd.AddCommand(syncCmd)
 }
@@ -18,17 +21,19 @@ var syncCmd = &cobra.Command{
 	Short: "Syncs project",
 	Long:  "Syncs project subjects with project metadata - use WatchExec to automate sync",
 	Args:  cobra.NoArgs,
-	Run:   sync,
+	Run:   syncProject,
 }
 
-func sync(cmd *cobra.Command, args []string) {
+func syncProject(cmd *cobra.Command, args []string) {
 	p, err := project.Load(actDir)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Sync project metadata with subject metadata
-	if err := project.Sync(&p); err != nil {
+	result, err := project.Sync(&p, confirmSync)
+	if err != nil {
 		log.Fatal(err)
 	}
+
+	result.Print(confirmSync)
 }
