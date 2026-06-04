@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/hanymamdouh82/operatree/internal/activitylog"
-	"github.com/hanymamdouh82/operatree/pkg/module"
 	"github.com/hanymamdouh82/operatree/pkg/subject"
 )
 
@@ -43,6 +42,8 @@ func NewSubject(p *Project, subjectName, subjectDate string, st subject.SubjectT
 		return err
 	}
 
+	fmt.Printf("uuid: %s\n", s.UUID)
+
 	// Persist subject to filesystem
 	if err := s.WriteToDisk(); err != nil {
 		return err
@@ -68,23 +69,4 @@ func NewSubject(p *Project, subjectName, subjectDate string, st subject.SubjectT
 	}
 
 	return nil
-}
-
-// findModule recursively searches for a module by type within the project hierarchy.
-func findModule(modules []module.Module, tmt module.ModuleType) (*module.Module, error) {
-	for i, m := range modules {
-		// Check if this module matches the target type
-		if m.Type == tmt {
-			return &modules[i], nil
-		}
-
-		// Recursively search submodules
-		if len(m.Modules) > 0 {
-			if found, err := findModule(m.Modules, tmt); err == nil && found != nil {
-				return found, nil
-			}
-		}
-	}
-
-	return nil, fmt.Errorf("module type %s not found in project", string(tmt))
 }

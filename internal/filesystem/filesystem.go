@@ -57,6 +57,21 @@ func StructToFile(s any, fullName string) error {
 }
 
 // `fullname` is the full file name including abs path
+func FileToStruct(s any, fullName string) error {
+
+	b, err := ReadFile(fullName)
+	if err != nil {
+		return err
+	}
+
+	if err := yaml.Unmarshal(b, s); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// `fullname` is the full file name including abs path
 func TextToMDFile(s string, fullName string) error {
 	b := []byte(s)
 
@@ -82,6 +97,19 @@ func Archive(srcPth, trgPth string) error {
 	// To-Do: implement recursive copy/delete later when daemon is implemented.
 	if err := os.Rename(srcPth, trgPth); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func RenameDir(srcPth, trgPth string) error {
+
+	if srcPth == "" || trgPth == "" {
+		return fmt.Errorf("cannot rename, either source path or target path is not provided")
+	}
+
+	if err := os.Rename(srcPth, trgPth); err != nil {
+		return nil
 	}
 
 	return nil

@@ -4,9 +4,23 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"github.com/google/uuid"
 	"github.com/hanymamdouh82/operatree/internal/filesystem"
 	"github.com/hanymamdouh82/operatree/internal/runner"
 )
+
+// Generates a unique ID for subject using new Google's v7 UUID.
+// We used v7 since it is sortable based on timestamp
+func (s *Subject) SetID() error {
+	// generate UUID
+	id7, err := uuid.NewV7()
+	if err != nil {
+		return err
+	}
+
+	s.UUID = id7.String()
+	return nil
+}
 
 // A method to create module directory
 func (s *Subject) MkDir() error {
@@ -43,6 +57,21 @@ func (s *Subject) WriteFiles() error {
 	}
 
 	return nil
+}
+
+// Reads metadata.yml file for the subject from subject dir
+func (s *Subject) ReadMetadata() (*Subject, error) {
+	fn := filepath.Join(s.DirName, METADATA_FILE)
+
+	var onDisk Subject
+	if err := filesystem.FileToStruct(&onDisk, fn); err != nil {
+		return nil, err
+	}
+
+	// restore DirName since it's excluded from YAML
+	onDisk.DirName = s.DirName
+
+	return &onDisk, nil
 }
 
 // Writes metadata.yml file for the subject at subject dir
@@ -93,6 +122,14 @@ func (s *Subject) EditMetadata() error {
 
 	fn := filepath.Join(s.DirName, METADATA_FILE)
 	if err := runner.EditFile(fn); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *Subject) Rename(newName string) error {
+	if err := renameSubject(s, newName); err != nil {
 		return err
 	}
 

@@ -66,6 +66,7 @@ var (
 // searchable, indexable, parsed by describe()
 // This is like 01_RAW inside 06_DATA module
 type Subject struct {
+	UUID    string      `yaml:"uuid"`
 	Type    SubjectType `yaml:"type"`
 	Name    string      `yaml:"name"`
 	DirName string      `yaml:"-"`
