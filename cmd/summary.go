@@ -15,10 +15,17 @@ func init() {
 
 var summaryCmd = &cobra.Command{
 	Use:   "summary",
-	Short: "Summarizes project at a glance",
-	Long:  "Prints a high-level summary of project subjects, counts and status",
-	Args:  cobra.NoArgs,
-	Run:   summary,
+	Short: "Show project summary",
+	Long: `Print a high-level overview of the project at a glance.
+
+Displays subject counts broken down by type and status — useful for a quick
+pulse check on project activity without browsing individual subjects.
+
+Examples:
+  operatree summary
+  operatree summary -d /path/to/project`,
+	Args: cobra.NoArgs,
+	Run:  summary,
 }
 
 func summary(cmd *cobra.Command, args []string) {

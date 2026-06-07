@@ -14,11 +14,18 @@ func init() {
 }
 
 var setDPCmd = &cobra.Command{
-	Use:   "default",
-	Short: "Sets default project",
-	Long:  "Sets a default project from tracked projects",
-	Args:  cobra.NoArgs,
-	Run:   setDefaultProject,
+	Use:   "use",
+	Short: "Set the default project",
+	Long: `Interactively select a default project from your tracked projects.
+
+Once set, all commands use it automatically without requiring the -d flag.
+To view the current default, run 'operatree show default'.
+
+Examples:
+  operatree use                  # pick default project interactively
+  operatree show default         # show current default project`,
+	Args: cobra.NoArgs,
+	Run:  setDefaultProject,
 }
 
 func setDefaultProject(cmd *cobra.Command, args []string) {

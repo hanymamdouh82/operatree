@@ -18,9 +18,21 @@ func init() {
 var va = []cobra.Completion{"tracked", "config", "templates", "default"}
 
 var showCmd = &cobra.Command{
-	Use:       fmt.Sprintf("show [%s]", strings.Join(va, " | ")),
-	Short:     "Show information about operatree",
-	Long:      "Shows information about operatree",
+	Use:   fmt.Sprintf("show [%s]", strings.Join(va, " | ")),
+	Short: "Show OperaTree information",
+	Long: `Display information about OperaTree configuration and state.
+
+Arguments:
+  tracked     List all tracked projects
+  config      Display current configuration
+  templates   List available project templates
+  default     Show the currently set default project
+
+Examples:
+  operatree show tracked
+  operatree show config
+  operatree show templates
+  operatree show default`,
 	ValidArgs: va,
 	Args:      cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
 	Run:       show,

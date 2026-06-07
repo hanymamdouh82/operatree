@@ -18,10 +18,22 @@ func init() {
 
 var descCmd = &cobra.Command{
 	Use:   "describe",
-	Short: "Describes a project",
-	Long:  "Describes a project and prints its metadata",
-	Args:  cobra.NoArgs,
-	Run:   describe,
+	Short: "Describe a project",
+	Long: `Print a structured, colored view of the project directory and its metadata.
+
+Use --plain to output raw YAML instead — useful for piping into grep, sed, or other UNIX tools.
+
+Flags:
+  -p, --plain   Output raw YAML instead of styled view
+  -d, --dest    Project directory to operate on
+
+Examples:
+  operatree describe
+  operatree describe --plain
+  operatree describe --plain | grep tags
+  operatree describe -d /path/to/project`,
+	Args: cobra.NoArgs,
+	Run:  describe,
 }
 
 func describe(cmd *cobra.Command, args []string) {

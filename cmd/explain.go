@@ -16,9 +16,17 @@ func init() {
 
 var explainCmd = &cobra.Command{
 	Use:   "explain",
-	Short: "Prints operatree dir philosophy",
-	Long:  "Explains full documentation for OperaTree dir usage philosophy",
-	Run:   explain,
+	Short: "Explain the directory structure",
+	Long: `Print the full OperaTree directory philosophy guide.
+
+Covers what each folder is for, what belongs in it, and how the layers
+relate to each other — useful when onboarding new team members or setting
+up a project from scratch.
+
+Examples:
+  operatree explain
+  operatree explain | less`,
+	Run: explain,
 }
 
 func explain(cmd *cobra.Command, args []string) {

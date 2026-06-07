@@ -15,10 +15,23 @@ func init() {
 
 var findCmd = &cobra.Command{
 	Use:   "find [type] [term]",
-	Short: "Finds a subject in project",
-	Long:  "Fuzzy-Find a subject in a project",
-	Args:  cobra.MatchAll(cobra.MaximumNArgs(2)),
-	Run:   find,
+	Short: "Find a subject",
+	Long: `Fuzzy-find subjects across all metadata fields — name, tags, participants, notes, date, and location.
+
+Optionally narrow the search by providing a subject type, a search term, or both
+before launching the interactive finder. The finder includes a live preview panel
+for the selected subject.
+
+Flags:
+  -d, --dest   Project directory to operate on
+
+Examples:
+  operatree find                        # browse all subjects interactively
+  operatree find event                  # filter to events, then pick one
+  operatree find event cairo            # filter to events matching "cairo"
+  operatree find cairo                  # search "cairo" across all subject types`,
+	Args: cobra.MatchAll(cobra.MaximumNArgs(2)),
+	Run:  find,
 }
 
 func find(cmd *cobra.Command, args []string) {

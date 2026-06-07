@@ -15,11 +15,22 @@ func init() {
 }
 
 var openSubjectCmd = &cobra.Command{
-	Use:   "open",
-	Short: "Opens subject directory",
-	Long:  "Opens subject directory in default file manager",
-	Args:  cobra.MatchAll(cobra.MaximumNArgs(2)),
-	Run:   openSubject,
+	Use:   "open [type] [term]",
+	Short: "Open a subject directory",
+	Long: `Fuzzy-find a subject and open its directory in your configured file manager.
+
+Optionally narrow the search by providing a subject type, a search term, or both
+before launching the interactive finder.
+
+The file manager is set during 'operatree init' and stored in config.
+
+Examples:
+  operatree open                         # browse all subjects interactively
+  operatree open task                    # filter to tasks, then pick one
+  operatree open task report             # filter to tasks matching "report"
+  operatree open -d /path/to/project     # browse all subjects interactively in project at /path/to/project`,
+	Args: cobra.MatchAll(cobra.MaximumNArgs(2)),
+	Run:  openSubject,
 }
 
 func openSubject(cmd *cobra.Command, args []string) {

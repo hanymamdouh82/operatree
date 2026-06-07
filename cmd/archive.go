@@ -15,10 +15,18 @@ func init() {
 
 var archiveCmd = &cobra.Command{
 	Use:   "archive [type] [term]",
-	Short: "Finds a subject in project",
-	Long:  "Fuzzy-Find a subject in a project",
-	Args:  cobra.MatchAll(cobra.MaximumNArgs(2)),
-	Run:   archiveSubject,
+	Short: "Archive a subject",
+	Long: `Fuzzy-find a subject and move it to the project archive (99_ARCHIVE/).
+
+Optionally narrow the search by providing a subject type and/or search term
+before launching the interactive finder.
+
+Examples:
+  operatree archive                   # browse all subjects interactively
+  operatree archive task              # filter to tasks, then pick one
+  operatree archive task report       # filter to tasks matching "report"`,
+	Args: cobra.MatchAll(cobra.MaximumNArgs(2)),
+	Run:  archiveSubject,
 }
 
 func archiveSubject(cmd *cobra.Command, args []string) {

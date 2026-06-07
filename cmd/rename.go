@@ -15,10 +15,23 @@ func init() {
 
 var renameSubjectCmd = &cobra.Command{
 	Use:   "rename [type] [term]",
-	Short: "Finds a subject in project and rename it",
-	Long:  "Fuzzy-Find a subject in a project and rename it",
-	Args:  cobra.MatchAll(cobra.MaximumNArgs(2)),
-	Run:   renameSubject,
+	Short: "Rename a subject",
+	Long: `Fuzzy-find a subject and rename it interactively.
+
+Updates both the subject directory name and its META.yaml in place.
+Optionally narrow the search by providing a subject type, a search term, or both
+before launching the interactive finder.
+
+Flags:
+  -d, --dest   Project directory to operate on
+
+Examples:
+  operatree rename                       # browse all subjects interactively
+  operatree rename task                  # filter to tasks, then pick one
+  operatree rename task report           # filter to tasks matching "report"
+  operatree rename -d /path/to/project`,
+	Args: cobra.MatchAll(cobra.MaximumNArgs(2)),
+	Run:  renameSubject,
 }
 
 func renameSubject(cmd *cobra.Command, args []string) {

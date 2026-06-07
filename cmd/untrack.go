@@ -16,10 +16,25 @@ func init() {
 
 var untrackCmd = &cobra.Command{
 	Use:   "untrack [project_name]",
-	Short: "Untracks project",
-	Long:  "Untracks project from tracked projects",
-	Args:  cobra.MaximumNArgs(1),
-	Run:   untrack,
+	Short: "Untrack a project",
+	Long: `Remove a project from your OperaTree tracked projects list.
+
+The project can be identified either by name or by directory path.
+The project directory and its contents are not affected.
+
+Resolution order:
+  1. project_name argument — untrack by name as registered in config
+  2. -d flag              — untrack by directory path
+
+Flags:
+  -d, --dest   Project directory to untrack
+
+Examples:
+  operatree untrack myproject              # untrack by name
+  operatree untrack -d /path/to/project   # untrack by path
+  operatree untrack -d .                  # untrack current directory`,
+	Args: cobra.MaximumNArgs(1),
+	Run:  untrack,
 }
 
 func untrack(cmd *cobra.Command, args []string) {

@@ -11,17 +11,24 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(jumpCmd)
+	rootCmd.AddCommand(gotoCmd)
 }
 
-var jumpCmd = &cobra.Command{
-	Use:   "jump",
-	Short: "Opens project dir in default file manager",
-	Long:  "Opens a tracked project dir using fuzzy-finder into default file manager",
-	Run:   jump,
+var gotoCmd = &cobra.Command{
+	Use:   "goto",
+	Short: "Jump to a tracked project",
+	Long: `Interactively select from your tracked projects and open the chosen
+project directory in your configured file manager.
+
+The file manager is set during 'operatree init' and stored in config.
+To change it, update the 'fileManager' field in your config file.
+
+Examples:
+  operatree goto`,
+	Run: gotoProject,
 }
 
-func jump(cmd *cobra.Command, args []string) {
+func gotoProject(cmd *cobra.Command, args []string) {
 
 	c, err := config.Load()
 	if err != nil {

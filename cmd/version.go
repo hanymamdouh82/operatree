@@ -26,7 +26,10 @@ func init() {
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print version information",
-	Long:  "Print version, commit hash and build date",
+	Long: `Print the current OperaTree version, commit hash, and build date.
+
+Examples:
+  operatree version`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("OperaTree %s\n", version)
 		fmt.Printf("  Commit:     %s\n", commit)
