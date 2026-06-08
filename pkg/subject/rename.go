@@ -14,14 +14,15 @@ import (
 // Renames the subject dir and recreates the METADATA.yml file
 // Project receiver function is responsible for updating project metadata not subject.
 // `nn` is the new name
-func renameSubject(s *Subject, nn string) error {
+// it should return the new name, since it can read new name from interactive prompt
+func renameSubject(s *Subject, nn string) (string, error) {
 	// check new name to either show interactive CLI or use provided name
 
 	// interactive cli
 	if nn == "" {
 		inn, err := interactiveRename(s.Name)
 		if err != nil {
-			return err
+			return "", err
 		}
 
 		nn = inn
@@ -35,14 +36,14 @@ func renameSubject(s *Subject, nn string) error {
 	// identify base dir
 	bd, found := strings.CutSuffix(s.DirName, s.Name)
 	if !found {
-		return fmt.Errorf("failed to extract dir name from subject name")
+		return nn, fmt.Errorf("failed to extract dir name from subject name")
 	}
 
 	newDirName := filepath.Join(filepath.Clean(bd), nn)
 
 	// call filesystem to rename
 	if err := filesystem.RenameDir(s.DirName, newDirName); err != nil {
-		return nil
+		return nn, nil
 	}
 
 	// update subject struct for new name and updated dir
@@ -51,10 +52,10 @@ func renameSubject(s *Subject, nn string) error {
 
 	// call write metadata to overwrite the metadata with new name
 	if err := s.WriteMetadata(); err != nil {
-		return err
+		return nn, err
 	}
 
-	return nil
+	return nn, nil
 }
 
 func interactiveRename(oldName string) (string, error) {

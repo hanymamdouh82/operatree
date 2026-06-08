@@ -86,46 +86,5 @@ func (p *Project) Archive(s subject.Subject) error {
 // finds subject within a project and renames it, and updates project METADATA.yml
 func (p *Project) RenameSubject(st, term, newName string, uuid string) error {
 
-	var s subject.Subject
-	var err error
-
-	// find the required subject using interactive CLI for user to select the required one
-	if uuid == "" {
-		s, err = FindSubject(p, st, term)
-		if err != nil {
-			return err
-		}
-	} else {
-		sp, err := FindSubjectByID(p, uuid)
-		if err != nil {
-			return err
-		}
-
-		s = *sp
-	}
-
-	if s.Type == "" {
-		return fmt.Errorf("couldn't identify subject type")
-	}
-
-	// rename subject. internally it updates subject METADATA also
-	if err := s.Rename(newName); err != nil {
-		return err
-	}
-
-	// find subject within the project to update the project metadata
-	ps, err := FindSubjectByID(p, s.UUID)
-	if err != nil {
-		return err
-	}
-
-	// deference edited subject with found in project
-	*ps = s
-
-	// update project metadata for the subject
-	if err := p.WriteMetadata(); err != nil {
-		return err
-	}
-
-	return nil
+	return RenameSubject(p, st, term, newName, uuid)
 }

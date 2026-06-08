@@ -128,10 +128,6 @@ func (s *Subject) EditMetadata() error {
 	return nil
 }
 
-func (s *Subject) Rename(newName string) error {
-	if err := renameSubject(s, newName); err != nil {
-		return err
-	}
-
-	return nil
+func (s *Subject) Rename(newName string) (string, error) {
+	return renameSubject(s, newName)
 }

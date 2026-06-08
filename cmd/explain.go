@@ -33,7 +33,16 @@ func explain(cmd *cobra.Command, args []string) {
 
 	data, _ := help.FS.ReadFile("dir_struct.md")
 
-	out, err := glamour.Render(string(data), "dark")
+	// Create a custom renderer without preserved new lines
+	r, err := glamour.NewTermRenderer(
+		glamour.WithStylePath("dark"),
+		glamour.WithWordWrap(80),
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	out, err := r.Render(string(data))
 	if err != nil {
 		log.Fatal(err)
 	}

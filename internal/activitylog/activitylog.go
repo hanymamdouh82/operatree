@@ -17,6 +17,7 @@ const (
 	ActionEdit    Action = "EDIT"
 	ActionDelete  Action = "DELETE"
 	ActionArchive Action = "ARCHIVE"
+	ActionRename  Action = "RENAME"
 )
 
 type Entry struct {
