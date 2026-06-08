@@ -10,10 +10,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var subjectName string
-var subjectDate string
+// var subjectName string
+// var subjectDate string
 var validSubjects []cobra.Completion
 var addCmd = &cobra.Command{}
+
+var ns subject.Subject
 
 func init() {
 	// build completion slice from available subjects dynamically
@@ -47,8 +49,22 @@ Examples:
 	}
 
 	addCmd.Flags().StringVarP(&destDir, "dest", "d", actDir, dFlagHelp_project)
-	addCmd.Flags().StringVar(&subjectName, "name", "", "subject name")
-	addCmd.Flags().StringVar(&subjectDate, "date", "", "subject date")
+	addCmd.Flags().StringVar(&ns.Name, "name", "", "subject name")
+	addCmd.Flags().StringVar(&ns.Date, "date", "", "subject date")
+	addCmd.Flags().StringVar(&ns.Notes, "notes", "", "subject notes")
+	addCmd.Flags().StringSliceVar(&ns.Tags, "tags", []string{}, "subject tags, comma delimited")
+	addCmd.Flags().StringSliceVar(&ns.Participants, "participants", []string{}, "subject participants, comma delimited")
+	addCmd.Flags().StringVar(&ns.Location, "location", "", "subject location, valid for Events only")
+	addCmd.Flags().StringVar(&ns.Owner, "owner", "", "subject owner")
+	addCmd.Flags().StringVar(&ns.Status, "status", "", "subject status")
+	addCmd.Flags().StringVar(&ns.RelatedObjective, "related-objective", "", "subject related objective")
+	addCmd.Flags().StringSliceVar(&ns.RelatedEvents, "related-events", []string{}, "subject related events, comma delimited")
+	addCmd.Flags().StringSliceVar(&ns.Outputs, "outputs", []string{}, "subject outputs, comma delimited")
+	addCmd.Flags().StringVar(&ns.Source, "source", "", "datssource source")
+	addCmd.Flags().StringVar(&ns.SourceLink, "source-link", "", "datssource source link")
+	addCmd.Flags().StringVar(&ns.SourceObjective, "source-objective", "", "datssource source objective")
+	addCmd.Flags().StringVar(&ns.SourceDataSize, "source-datasize", "", "datssource source size")
+
 	addCmd.PreRun = resolveProjectDir
 	rootCmd.AddCommand(addCmd)
 }
@@ -68,7 +84,7 @@ func newSubject(cmd *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
-	if err := project.NewSubject(&p, subjectName, subjectDate, subject.SubjectType(st)); err != nil {
+	if err := project.NewSubject(&p, ns, subject.SubjectType(st)); err != nil {
 		log.Fatal(err)
 	}
 }
