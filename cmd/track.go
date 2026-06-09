@@ -21,10 +21,21 @@ func init() {
 
 var trackCmd = &cobra.Command{
 	Use:   "track",
-	Short: "Track project",
-	Long:  "Adds project to tracked projects",
-	Args:  cobra.NoArgs,
-	Run:   track,
+	Short: "Track a project",
+	Long: `Register a project directory in your OperaTree configuration.
+
+Tracked projects are available for default selection, the 'goto' command,
+and all commands that resolve the project directory automatically.
+The project directory must be provided via -d and is required.
+
+Flags:
+  -d, --dest   Project directory to register (required)
+
+Examples:
+  operatree track -d /path/to/project
+  operatree track -d .`,
+	Args: cobra.NoArgs,
+	Run:  track,
 }
 
 func track(cmd *cobra.Command, args []string) {

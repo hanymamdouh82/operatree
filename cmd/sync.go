@@ -15,10 +15,19 @@ func init() {
 
 var syncCmd = &cobra.Command{
 	Use:   "sync",
-	Short: "Syncs project",
-	Long:  "Syncs project subjects with project metadata",
-	Args:  cobra.NoArgs,
-	Run:   sync,
+	Short: "Sync project metadata",
+	Long: `Walk the full project tree, re-read every META.yaml from disk, and update
+the project metadata index.
+
+Run this after editing subject files manually outside of OperaTree — for example
+after bulk edits, git pulls, or file syncs that modify META.yaml files directly.
+Note: the 'edit' command runs sync automatically after the editor is closed.
+
+Examples:
+  operatree sync
+  operatree sync -d /path/to/project`,
+	Args: cobra.NoArgs,
+	Run:  sync,
 }
 
 func sync(cmd *cobra.Command, args []string) {

@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/hanymamdouh82/operatree/internal/activitylog"
-	"github.com/hanymamdouh82/operatree/pkg/module"
 	"github.com/hanymamdouh82/operatree/pkg/subject"
 )
 
@@ -15,7 +14,7 @@ import (
 //   - subjectName: name of the subject
 //   - subjectDate: date associated with the subject
 //   - st: subject type (Event, Task, Topic, or Objective)
-func NewSubject(p *Project, subjectName, subjectDate string, st subject.SubjectType) error {
+func NewSubject(p *Project, cliSubject subject.Subject, st subject.SubjectType) error {
 	ss := ListSubjects(p, "")
 
 	// Validate subject type and get corresponding module type
@@ -32,9 +31,22 @@ func NewSubject(p *Project, subjectName, subjectDate string, st subject.SubjectT
 
 	// Create the subject instance
 	is := subject.Subject{
-		Type: st,
-		Name: subjectName,
-		Date: subjectDate,
+		Type:             st,
+		Name:             cliSubject.Name,
+		Date:             cliSubject.Date,
+		Notes:            cliSubject.Notes,
+		Tags:             cliSubject.Tags,
+		Participants:     cliSubject.Participants,
+		Location:         cliSubject.Location,
+		Owner:            cliSubject.Owner,
+		Status:           cliSubject.Status,
+		RelatedObjective: cliSubject.RelatedObjective,
+		RelatedEvents:    cliSubject.RelatedEvents,
+		Outputs:          cliSubject.Outputs,
+		Source:           cliSubject.Source,
+		SourceLink:       cliSubject.SourceLink,
+		SourceObjective:  cliSubject.SourceObjective,
+		SourceDataSize:   cliSubject.SourceDataSize,
 	}
 
 	// Use factory to build subject with validation
@@ -42,6 +54,8 @@ func NewSubject(p *Project, subjectName, subjectDate string, st subject.SubjectT
 	if err != nil {
 		return err
 	}
+
+	fmt.Printf("uuid: %s\n", s.UUID)
 
 	// Persist subject to filesystem
 	if err := s.WriteToDisk(); err != nil {
@@ -68,23 +82,4 @@ func NewSubject(p *Project, subjectName, subjectDate string, st subject.SubjectT
 	}
 
 	return nil
-}
-
-// findModule recursively searches for a module by type within the project hierarchy.
-func findModule(modules []module.Module, tmt module.ModuleType) (*module.Module, error) {
-	for i, m := range modules {
-		// Check if this module matches the target type
-		if m.Type == tmt {
-			return &modules[i], nil
-		}
-
-		// Recursively search submodules
-		if len(m.Modules) > 0 {
-			if found, err := findModule(m.Modules, tmt); err == nil && found != nil {
-				return found, nil
-			}
-		}
-	}
-
-	return nil, fmt.Errorf("module type %s not found in project", string(tmt))
 }

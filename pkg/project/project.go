@@ -82,3 +82,9 @@ func (p *Project) Archive(s subject.Subject) error {
 
 	return nil
 }
+
+// finds subject within a project and renames it, and updates project METADATA.yml
+func (p *Project) RenameSubject(st, term, newName string, uuid string) error {
+
+	return RenameSubject(p, st, term, newName, uuid)
+}

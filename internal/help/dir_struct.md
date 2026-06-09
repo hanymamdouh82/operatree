@@ -1,174 +1,770 @@
-# OperaTree - Project Directory Help
+# OperaTree Project Structure Guide
 
-| Path                   | Purpose                             | Typical Contents                               | Notes                      |
-| ---------------------- | ----------------------------------- | ---------------------------------------------- | -------------------------- |
-| `00_ADMIN/`            | Administrative and governance layer | Policies, governance docs, contacts, templates | High-level project control |
-| `00_ADMIN/governance/` | Governance and control              | Charter, governance rules, responsibilities    | Executive-level            |
-| `00_ADMIN/contacts/`   | Stakeholder references              | Contacts, organizations, teams                 | Internal reference         |
-| `00_ADMIN/templates/`  | Reusable templates                  | MoM templates, report templates                | Shared operational assets  |
-| `00_ADMIN/guidelines/` | Operational standards               | Naming conventions, workflows                  | Team alignment             |
+**Repository:** [OperaTree GitHub Repository](https://github.com/hanymamdouh82/operatree.git?utm_source=chatgpt.com)
 
----
 
-| Path                               | Purpose                                | Typical Contents            | Notes                         |
-| ---------------------------------- | -------------------------------------- | --------------------------- | ----------------------------- |
-| `01_EVENTS/`                       | Timeline/history of project activities | Visits, workshops, meetings | Event-centric organization    |
-| `01_EVENTS/YYYY-MM-DD-event-name/` | One project event                      | Full event artifacts        | Self-contained event package  |
-| `01_AGENDA/`                       | Event planning                         | Invitations, schedules      | Pre-event                     |
-| `02_MEDIA/`                        | Raw media                              | Photos, videos, recordings  | Unprocessed assets            |
-| `03_NOTES/`                        | Raw capture                            | Notes, transcripts          | Unfiltered information        |
-| `04_DOCUMENTS/`                    | Event materials                        | Presentations, shared docs  | Supporting docs               |
-| `05_OUTCOMES/`                     | Event conclusions                      | MoM, actions, decisions     | Distilled operational outputs |
-| `META.yaml`                        | Event metadata                         | Date, tags, participants    | Search/index support          |
+## Introduction
 
----
+OperaTree is built around a simple principle:
 
-| Path                     | Purpose                              | Typical Contents              | Notes                    |
-| ------------------------ | ------------------------------------ | ----------------------------- | ------------------------ |
-| `02_PROJECT_MANAGEMENT/` | Execution and operational management | Tasks, reports, risks         | “What are we doing?”     |
-| `01_TASKS/`              | Active operational work              | Drafts, reviews, working docs | Task-oriented workspace  |
-| `task_name/`             | One operational task                 | Frameworks, NDA drafts, notes | Working lifecycle        |
-| `01_INPUTS/`             | Task inputs                          | Requirements, references      | Initial materials        |
-| `02_WORKING/`            | Work-in-progress                     | Drafts, iterations            | Main active area         |
-| `03_REVIEW/`             | Review stage                         | Reviewed docs, comments       | Approval process         |
-| `04_FINAL/`              | Approved task outputs                | Final task artifacts          | Can later move elsewhere |
-| `reports/`               | PM reporting                         | Status reports, KPIs          | Management tracking      |
-| `budgets/`               | Financial management                 | Cost sheets, estimations      | Budget tracking          |
-| `risks/`                 | Risk management                      | Risk logs, mitigation         | Operational control      |
-| `communications/`        | Communication tracking               | Emails, announcements         | Coordination layer       |
-| `planning/`              | Planning artifacts                   | Roadmaps, schedules           | Strategic planning       |
+> Organize project knowledge according to its purpose, not its file type.
 
----
+Most projects eventually become difficult to navigate because documents are grouped by format:
 
-| Path          | Purpose               | Typical Contents        | Notes                       |
-| ------------- | --------------------- | ----------------------- | --------------------------- |
-| `03_LEGAL/`   | Legal authority layer | Approved legal docs     | Finalized only              |
-| `contracts/`  | Contracts             | Signed agreements       | Official copies             |
-| `ndas/`       | NDAs                  | Signed NDAs             | Legal reference             |
-| `compliance/` | Compliance docs       | Regulations, audits     | Governance/compliance       |
-| `approvals/`  | Formal approvals      | Signed approvals        | Official decisions          |
-| `templates/`  | Legal templates       | Standard NDA, contracts | Reusable approved templates |
+```plaintext
+Documents/
+Photos/
+PDFs/
+Presentations/
+```
 
----
+This approach makes it difficult to answer practical questions such as:
 
-| Path                    | Purpose                          | Typical Contents                 | Notes                            |
-| ----------------------- | -------------------------------- | -------------------------------- | -------------------------------- |
-| `04_RESEARCH/`          | Knowledge and intelligence layer | Research, objectives, summaries  | Intellectual backbone            |
-| `00_INDEX/`             | Navigation/index layer           | Topic indexes, tags, maps        | Knowledge navigation             |
-| `01_TOPICS/`            | Concept-centric knowledge        | Explanations, theory, frameworks | “What is this?”                  |
-| `topic_name/`           | One knowledge topic              | Notes, overview, attachments     | Domain knowledge                 |
-| `overview.md`           | Main topic explanation           | Curated understanding            | Primary file                     |
-| `notes.md`              | Additional insights              | Detailed notes                   | Supporting knowledge             |
-| `attachments/`          | Topic-specific resources         | PDFs, whitepapers                | Supporting only                  |
-| `diagrams/`             | Topic visuals                    | Diagrams, sketches               | Concept illustrations            |
-| `02_OBJECTIVES/`        | Goal-centric intelligence        | Findings, strategy, evidence     | “What are we trying to achieve?” |
-| `objective_name/`       | One project objective            | Research, notes, evidence        | Operational intelligence         |
-| `definition.md`         | Goal definition                  | Objective statement              | Starting point                   |
-| `findings.md`           | Objective findings               | Observations, discoveries        | Active intelligence              |
-| `strategy.md`           | Planned direction                | Decisions, approaches            | Action-oriented                  |
-| `notes/`                | Working notes                    | Brainstorming, thoughts          | Temporary thinking               |
-| `discussions/`          | Discussion artifacts             | AI chats, meeting extracts       | Exploration layer                |
-| `attachments/`          | Objective resources              | PDFs, references                 | Objective-bound materials        |
-| `supporting_data.md`    | Data references                  | Links to datasets                | Connects DATA layer              |
-| `03_SUMMARIES/`         | Distilled insights               | Summaries and conclusions        | “What matters?”                  |
-| `event_summaries/`      | Event conclusions                | Visit/workshop summaries         | Distilled events                 |
-| `objective_summaries/`  | Objective conclusions            | Final strategic understanding    | Decision snapshots               |
-| `research_summaries/`   | Research takeaways               | Paper/book summaries             | Condensed learning               |
-| `discussion_summaries/` | Discussion conclusions           | Brainstorming outputs            | High-signal extraction           |
-| `executive_summaries/`  | High-level reporting             | Strategic summaries              | Leadership-level                 |
-| `04_REFERENCES/`        | External knowledge library       | Books, papers, standards         | “Things we read”                 |
-| `articles/`             | Articles                         | Online/offline articles          | General references               |
-| `books/`                | Books                            | PDFs, EPUBs                      | Long-form references             |
-| `papers/`               | Academic papers                  | Research PDFs                    | Formal studies                   |
-| `standards/`            | Standards                        | ISO, regulations                 | Industry standards               |
-| `vendor_docs/`          | Vendor references                | Whitepapers, manuals             | External technical docs          |
-| `05_AUDIO_NOTES/`       | Audio knowledge capture          | Voice notes, transcripts         | Verbal knowledge                 |
-| `raw/`                  | Original recordings              | Raw audio                        | Immutable                        |
-| `transcriptions/`       | Converted text                   | Speech-to-text outputs           | Searchable                       |
-| `indexed/`              | Structured audio notes           | Tagged summaries                 | Curated                          |
-| `06_ATTACHMENTS/`       | General binary support           | Scans, PDFs, misc assets         | Non-primary storage              |
+- Where is the research behind this decision?
+- Which factory visit produced this finding?
+- Which files support this objective?
+- Which datasets were used for this report?
+
+OperaTree organizes information by **business meaning and lifecycle** rather than by file extension.
+
+The directory structure acts as a project operating system that helps teams:
+
+- Preserve knowledge
+- Improve discoverability
+- Maintain traceability
+- Support collaboration
+- Prepare for AI-assisted knowledge retrieval
+- Reduce information loss over long projects
+
+
+## Core Philosophy
+
+Every file belongs to one of six categories:
+
+| Category           | Question Answered          |
+| ------------------ | -------------------------- |
+| Events             | What happened?             |
+| Project Management | What are we doing?         |
+| Research           | What do we know?           |
+| Engineering        | What are we building?      |
+| Data               | What have we measured?     |
+| Deliverables       | What are we communicating? |
+
+When deciding where to place a file, identify the question it answers.
+
+## Top-Level Directory Overview
+
+```plaintext
+00_ADMIN
+01_EVENTS
+02_PROJECT_MANAGEMENT
+03_LEGAL
+04_RESEARCH
+05_ENGINEERING
+06_DATA
+97_MEDIA_LIBRARY
+98_DELIVERABLES
+99_ARCHIVE
+```
 
 ---
 
-| Path              | Purpose                | Typical Contents                | Notes                    |
-| ----------------- | ---------------------- | ------------------------------- | ------------------------ |
-| `05_ENGINEERING/` | Technical/system layer | Architecture, specs, prototypes | Technical implementation |
-| `architecture/`   | System architecture    | High-level designs              | Core system logic        |
-| `diagrams/`       | Engineering visuals    | UML, workflows                  | Technical diagrams       |
-| `specifications/` | Specs                  | Functional/non-functional specs | Requirements             |
-| `prototypes/`     | Experimental builds    | PoCs, mockups                   | Early implementations    |
-| `simulations/`    | Simulated models       | Simulations, experiments        | Testing ideas            |
-| `decisions/`      | Technical decisions    | ADRs, rationale                 | Architecture history     |
+## 00_ADMIN
+
+### Purpose
+
+Administrative and governance information for the project.
+
+### Contents
+
+| Directory  | Purpose                                             |
+| ---------- | --------------------------------------------------- |
+| governance | Project charter, governance model, responsibilities |
+| contacts   | Stakeholder and team contact information            |
+| templates  | Reusable document templates                         |
+| guidelines | Project procedures and standards                    |
+
+### Examples
+
+- Project charter
+- Naming conventions
+- Meeting templates
+- Communication guidelines
 
 ---
 
-| Path                 | Purpose                     | Typical Contents          | Notes                 |
-| -------------------- | --------------------------- | ------------------------- | --------------------- |
-| `06_DATA/`           | Data pipeline and datasets  | Raw → processed data      | Data lifecycle        |
-| `00_SOURCES/`        | Data source metadata        | YAML, source descriptions | Lineage layer         |
-| `01_RAW/`            | Immutable source data       | CSV, dumps, imports       | Never modified        |
-| `kaggle/`            | Kaggle datasets             | Downloaded datasets       | External              |
-| `team_inputs/`       | Team-provided data          | XLSX, exports             | Internal              |
-| `external/`          | External sources            | Third-party data          | Imported              |
-| `02_STAGING/`        | Temporary transformations   | Cleaned, normalized data  | Processing layer      |
-| `cleaned/`           | Cleaned datasets            | Corrected data            | Pre-processing        |
-| `normalized/`        | Standardized schemas        | Unified structures        | Harmonization         |
-| `merged/`            | Combined datasets           | Joined data               | Intermediate          |
-| `temp/`              | Temporary work              | Scratch processing        | Disposable            |
-| `03_PROCESSED/`      | Trusted/business-ready data | Aggregates, snapshots     | Main analytical layer |
-| `warehouse/`         | Structured storage          | Curated datasets          | Reliable source       |
-| `feature_sets/`      | ML-ready data               | Features, vectors         | AI/ML prep            |
-| `aggregates/`        | Summaries                   | KPIs, grouped results     | Reporting-ready       |
-| `snapshots/`         | Time captures               | Historical versions       | Time-based state      |
-| `04_ANALYTICS/`      | Exploration and experiments | Notebooks, analysis       | Non-authoritative     |
-| `notebooks/`         | Interactive analysis        | Jupyter notebooks         | Exploration           |
-| `experiments/`       | Experimental outputs        | Test runs, analysis       | Temporary insights    |
-| `visualizations/`    | Visual outputs              | Charts, graphs            | Presentation layer    |
-| `05_MODELS/`         | AI/ML artifacts             | Trained models            | Optional ML layer     |
-| `trained/`           | Final models                | Saved models              | Reusable              |
-| `checkpoints/`       | Intermediate models         | Training states           | Recovery/testing      |
-| `metadata/`          | Model metadata              | Params, metrics           | Traceability          |
-| `06_EXPORTS/`        | External-facing data        | Client exports            | Shared outputs        |
-| `reports_data/`      | Report datasets             | Excel/CSV exports         | Reporting support     |
-| `dashboards/`        | Dashboard feeds             | BI exports                | Visualization systems |
-| `client_deliveries/` | Shared datasets             | Delivered files           | External delivery     |
-| `99_ARCHIVE/`        | Old data                    | Deprecated datasets       | Historical storage    |
+## 01_EVENTS
+
+### Purpose
+
+Stores all information related to specific project events.
+
+An event is anything that occurs at a specific point in time.
+
+Examples:
+
+- Factory visit
+- Workshop
+- Seminar
+- Stakeholder meeting
+- Field survey
+- Training session
 
 ---
 
-| Path                   | Purpose                | Typical Contents           | Notes                 |
-| ---------------------- | ---------------------- | -------------------------- | --------------------- |
-| `07_MEDIA_LIBRARY/`    | Shared reusable media  | Photos, diagrams, branding | Central asset library |
-| `photos_clean/`        | Curated photos         | Cleaned images             | Reusable              |
-| `videos/`              | Videos                 | Edited recordings          | Shared assets         |
-| `diagrams/`            | Shared visuals         | Common diagrams            | Cross-project reuse   |
-| `presentation_assets/` | Presentation materials | Slides assets              | Communication support |
-| `branding/`            | Branding materials     | Logos, guidelines          | Identity layer        |
+## Event Structure
+
+```plaintext
+01_EVENTS/
+└── 2026-04-15-factory-visit/
+    ├── 01_AGENDA
+    ├── 02_MEDIA
+    ├── 03_NOTES
+    ├── 04_DOCUMENTS
+    ├── 05_OUTCOMES
+    └── META.yaml
+```
 
 ---
 
-| Path                | Purpose                | Typical Contents           | Notes              |
-| ------------------- | ---------------------- | -------------------------- | ------------------ |
-| `08_DELIVERABLES/`  | Final external outputs | Reports, submissions       | Stakeholder-facing |
-| `reports/`          | Final reports          | PDFs, DOCX                 | Official reporting |
-| `presentations/`    | Final presentations    | PPTX, slides               | Meetings/executive |
-| `submissions/`      | Formal submissions     | Tender/project submissions | External delivery  |
-| `client_documents/` | Shared client docs     | Approved deliverables      | Finalized outputs  |
+## Subdirectories
+
+| Directory    | Purpose                             |
+| ------------ | ----------------------------------- |
+| 01_AGENDA    | Plans, schedules, invitations       |
+| 02_MEDIA     | Photos, videos, recordings          |
+| 03_NOTES     | Raw notes and observations          |
+| 04_DOCUMENTS | Presentations and shared materials  |
+| 05_OUTCOMES  | Meeting minutes, actions, decisions |
 
 ---
 
-| Path              | Purpose          | Typical Contents        | Notes                 |
-| ----------------- | ---------------- | ----------------------- | --------------------- |
-| `scripts/`        | Automation layer | Bash utilities, helpers | Workflow acceleration |
-| `create_event.sh` | Event generator  | Event scaffolding       | Automation            |
-| `create_task.sh`  | Task generator   | Task scaffolding        | Automation            |
+## Rule
+
+Store raw event information here.
+
+Store long-term conclusions in:
+
+```plaintext
+04_RESEARCH/03_SUMMARIES
+```
 
 ---
 
-| Path            | Purpose                  | Typical Contents     | Notes               |
-| --------------- | ------------------------ | -------------------- | ------------------- |
-| `99_ARCHIVE/`   | Historical storage       | Deprecated materials | Long-term retention |
-| `old_versions/` | Legacy versions          | Older docs/data      | Historical tracking |
-| `closed_tasks/` | Completed/obsolete tasks | Archived tasks       | Inactive work       |
-| `deprecated/`   | Obsolete materials       | No longer used       | Preservation only   |
+# 02_PROJECT_MANAGEMENT
 
+## Purpose
+
+Manages project execution.
+
+This area answers:
+
+> What work is currently being performed?
+
+---
+
+## Structure
+
+```plaintext
+02_PROJECT_MANAGEMENT/
+├── 07_TASKS
+├── reports
+├── budgets
+├── risks
+├── communications
+└── planning
+```
+
+---
+
+## Tasks
+
+Each task contains its own working environment.
+
+Example:
+
+```plaintext
+07_TASKS/
+└── website-development/
+    ├── 01_INPUTS
+    ├── 02_WORKING
+    ├── 03_REVIEW
+    ├── 04_FINAL
+    └── META.yaml
+```
+
+---
+
+## Examples
+
+- NDA preparation
+- Framework creation
+- Website development
+- Procurement analysis
+- Vendor evaluation
+
+---
+
+## Rule
+
+If a file is actively supporting execution of work, it belongs here.
+
+---
+
+# 03_LEGAL
+
+## Purpose
+
+Official legal documentation.
+
+---
+
+## Structure
+
+| Directory  | Purpose                             |
+| ---------- | ----------------------------------- |
+| contracts  | Signed contracts                    |
+| ndas       | Executed NDAs                       |
+| compliance | Regulatory and compliance materials |
+| approvals  | Formal approvals                    |
+| templates  | Legal templates                     |
+
+---
+
+## Rule
+
+Store finalized legal documents here.
+
+Drafts generally remain under the corresponding task until approved.
+
+---
+
+# 04_RESEARCH
+
+## Purpose
+
+The knowledge and intelligence center of the project.
+
+---
+
+# 04_RESEARCH/09_TOPICS
+
+## Purpose
+
+Concept-centric knowledge.
+
+Answers:
+
+> What is this concept?
+
+---
+
+## Examples
+
+- Forecasting methods
+- Predictive maintenance
+- Digital twins
+- Lean manufacturing
+
+---
+
+## Typical Contents
+
+```plaintext
+forecasting_methods/
+├── overview.md
+├── notes.md
+├── diagrams/
+└── attachments/
+```
+
+---
+
+## Store Here
+
+- Explanations
+- Theory
+- Frameworks
+- Educational material
+- Topic-specific references
+
+---
+
+## Do Not Store Here
+
+- Project decisions
+- Factory-specific findings
+- Strategic actions
+
+---
+
+# 04_RESEARCH/10_OBJECTIVES
+
+## Purpose
+
+Goal-centric intelligence.
+
+Answers:
+
+> What are we trying to achieve?
+
+---
+
+## Examples
+
+- Reduce downtime
+- Improve forecasting accuracy
+- Create industry-agnostic platform
+- Improve production visibility
+
+---
+
+## Typical Contents
+
+```plaintext
+objective_reduce_downtime/
+├── definition.md
+├── findings.md
+├── strategy.md
+├── notes/
+├── discussions/
+└── attachments/
+```
+
+---
+
+## Store Here
+
+- Findings
+- Discussions
+- Research related to the objective
+- Brainstorming
+- Supporting evidence
+- Strategy proposals
+
+---
+
+## Rule
+
+Objectives are active thinking spaces.
+
+---
+
+# 04_RESEARCH/11_SUMMARIES
+
+## Purpose
+
+Distilled knowledge.
+
+Answers:
+
+> What matters?
+
+---
+
+## Examples
+
+| Type               | Example                      |
+| ------------------ | ---------------------------- |
+| Event Summary      | Factory visit conclusions    |
+| Research Summary   | Key findings from papers     |
+| Discussion Summary | DeepSeek discussion outcomes |
+| Objective Summary  | Final strategic conclusion   |
+| Executive Summary  | Management-level overview    |
+
+---
+
+## Rule
+
+Summaries contain conclusions, not raw information.
+
+---
+
+# 04_RESEARCH/12_REFERENCES
+
+## Purpose
+
+External knowledge library.
+
+Answers:
+
+> What have we read?
+
+---
+
+## Examples
+
+- Books
+- Research papers
+- Standards
+- Whitepapers
+- Regulations
+- Vendor documentation
+
+---
+
+## Suggested Structure
+
+```plaintext
+04_REFERENCES/
+├── articles
+├── books
+├── papers
+├── standards
+├── regulations
+└── vendor_docs
+```
+
+---
+
+## Rule
+
+Original external resources belong here.
+
+Your understanding belongs in:
+
+```plaintext
+09_TOPICS
+```
+
+---
+
+# 04_RESEARCH/13_AUDIO_NOTES
+
+## Purpose
+
+Knowledge captured verbally.
+
+---
+
+## Structure
+
+| Directory      | Purpose                   |
+| -------------- | ------------------------- |
+| raw            | Original recordings       |
+| transcriptions | Speech-to-text output     |
+| indexed        | Organized audio knowledge |
+
+---
+
+# 04_RESEARCH/14_ATTACHMENTS
+
+## Purpose
+
+General supporting files that do not fit neatly elsewhere.
+
+Examples:
+
+- Scans
+- Miscellaneous PDFs
+- Supporting images
+
+---
+
+# 05_ENGINEERING
+
+## Purpose
+
+Technical implementation and system design.
+
+---
+
+## Structure
+
+| Directory      | Purpose                              |
+| -------------- | ------------------------------------ |
+| architecture   | High-level designs                   |
+| diagrams       | Technical diagrams                   |
+| specifications | Requirements and specifications      |
+| prototypes     | Proofs of concept                    |
+| simulations    | Simulations and experiments          |
+| decisions      | Architecture Decision Records (ADRs) |
+
+---
+
+## Rule
+
+If it describes how the system works, it belongs here.
+
+---
+
+# 06_DATA
+
+## Purpose
+
+Manage the complete lifecycle of project data.
+
+---
+
+## Data Flow
+
+```plaintext
+Sources
+   ↓
+Raw
+   ↓
+Staging
+   ↓
+Processed
+   ↓
+Analytics
+   ↓
+Exports
+```
+
+---
+
+## 15_SOURCES
+
+Metadata describing data origins.
+
+Examples:
+
+- Kaggle dataset description
+- Team-provided dataset metadata
+- API source definitions
+
+---
+
+## 01_RAW
+
+Immutable source data.
+
+Never modify files here.
+
+Examples:
+
+- CSV exports
+- XLSX files
+- Database dumps
+
+---
+
+## 02_STAGING
+
+Intermediate processing area.
+
+Examples:
+
+- Cleaned datasets
+- Merged datasets
+- Temporary transformations
+
+---
+
+## 03_PROCESSED
+
+Trusted project-ready datasets.
+
+Examples:
+
+- Aggregated results
+- Feature sets
+- Curated datasets
+
+---
+
+## 04_ANALYTICS
+
+Exploration and analysis.
+
+Examples:
+
+- Notebooks
+- Experiments
+- Visualizations
+
+---
+
+## 05_MODELS
+
+Machine learning artifacts.
+
+Examples:
+
+- Trained models
+- Checkpoints
+- Evaluation metadata
+
+---
+
+## 06_EXPORTS
+
+Data prepared for external consumption.
+
+Examples:
+
+- Dashboard feeds
+- Reporting datasets
+- Client exports
+
+---
+
+# 97_MEDIA_LIBRARY
+
+## Purpose
+
+Reusable media assets shared across the project.
+
+---
+
+## Rule
+
+Ask:
+
+> Can this asset be reused by multiple tasks, reports, presentations, or deliverables?
+
+If yes, place it here.
+
+---
+
+## Suggested Structure
+
+```plaintext
+07_MEDIA_LIBRARY/
+├── branding
+├── people
+├── website
+├── photos_clean
+├── videos
+├── diagrams
+└── presentation_assets
+```
+
+---
+
+## Branding
+
+Examples:
+
+- Logos
+- Email signatures
+- Brand guidelines
+
+---
+
+## People
+
+Examples:
+
+- Team member photos
+- Speaker photos
+- Stakeholder photos
+
+---
+
+## Website
+
+Examples:
+
+- Website banners
+- Hero images
+- Illustrations
+- Optimized web assets
+
+---
+
+## Photos Clean
+
+Curated photos selected from events for long-term reuse.
+
+---
+
+# 98_DELIVERABLES
+
+## Purpose
+
+Final outputs provided to stakeholders.
+
+---
+
+## Examples
+
+| Directory        | Contents                |
+| ---------------- | ----------------------- |
+| reports          | Final reports           |
+| presentations    | Presentation decks      |
+| submissions      | Formal submissions      |
+| client_documents | Client-facing documents |
+
+---
+
+## Rule
+
+Only finalized outputs belong here.
+
+Drafts remain in tasks until approved.
+
+---
+
+# 99_ARCHIVE
+
+## Purpose
+
+Historical preservation.
+
+---
+
+## Examples
+
+- Deprecated materials
+- Obsolete datasets
+- Closed workstreams
+- Legacy versions
+
+---
+
+# File Placement Decision Tree
+
+When adding a file, ask:
+
+### Was it created during a specific event?
+
+→ `01_EVENTS`
+
+### Is it helping execute current work?
+
+→ `02_PROJECT_MANAGEMENT`
+
+### Is it a legal document?
+
+→ `03_LEGAL`
+
+### Is it knowledge or research?
+
+→ `04_RESEARCH`
+
+### Is it technical design or implementation?
+
+→ `05_ENGINEERING`
+
+### Is it data?
+
+→ `06_DATA`
+
+### Is it a reusable asset?
+
+→ `97_MEDIA_LIBRARY`
+
+### Is it a finalized external output?
+
+→ `98_DELIVERABLES`
+
+### Is it obsolete but must be retained?
+
+→ `99_ARCHIVE`
+
+---
+
+# Research Layer Cheat Sheet
+
+This is the most important distinction in the system.
+
+| Directory       | Question                       |
+| --------------- | ------------------------------ |
+| `01_TOPICS`     | What is this?                  |
+| `02_OBJECTIVES` | What are we trying to achieve? |
+| `03_SUMMARIES`  | What matters?                  |
+| `04_REFERENCES` | What have we read?             |
+
+If users understand these four directories, they will understand the entire knowledge model behind OperaTree.

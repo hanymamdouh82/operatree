@@ -10,6 +10,7 @@ import (
 func interactiveCLI(st SubjectType, s *Subject, ss []Subject) error {
 
 	var name, date, tags, notes string
+	date = time.Now().Format("2006-01-02")
 
 	// Standard fields — all types
 	err := huh.NewForm(
@@ -68,7 +69,7 @@ func interactiveCLI(st SubjectType, s *Subject, ss []Subject) error {
 
 	// Task-specific fields
 	if st == SubjectTask && len(ss) > 0 {
-		var owner, status, relatedEvent string
+		var owner, status string
 
 		// Build options for related events select
 		eventOptions := make([]huh.Option[string], len(ss))
@@ -92,10 +93,10 @@ func interactiveCLI(st SubjectType, s *Subject, ss []Subject) error {
 					).
 					Value(&status),
 
-				huh.NewSelect[string]().
+				huh.NewMultiSelect[string]().
 					Title("Related Subject").
 					Options(eventOptions...).
-					Value(&relatedEvent),
+					Value(&s.RelatedEvents), // stays empty slice if nothing selected
 			),
 		).Run()
 		if err != nil {
@@ -104,7 +105,7 @@ func interactiveCLI(st SubjectType, s *Subject, ss []Subject) error {
 
 		s.Owner = metadata.ParsePersonName(owner)
 		s.Status = status
-		s.RelatedEvents = append(s.RelatedEvents, relatedEvent)
+		// s.RelatedEvents = append(s.RelatedEvents, relatedEvent)
 	}
 
 	// Data-Source-specific fields
