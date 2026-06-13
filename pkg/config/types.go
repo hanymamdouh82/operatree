@@ -27,8 +27,18 @@ type Daemon struct {
 }
 
 func (c *Config) ListProjects() {
+	pn := "├──"
+	cn := "│   └──"
 
-	for _, p := range c.Projects {
-		fmt.Printf("Project: %s - Path: %s\n", p.Name, p.AbsPath)
+	fmt.Printf("Tracked Projects:\n")
+
+	for i, p := range c.Projects {
+		if i == len(c.Projects)-1 {
+			pn = "└──"
+			cn = "    └──"
+		}
+
+		fmt.Printf("%s %s\n", pn, p.Name)
+		fmt.Printf("%s %s\n", cn, p.AbsPath)
 	}
 }
