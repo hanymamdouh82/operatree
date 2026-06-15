@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"sort"
 
 	"gopkg.in/yaml.v3"
 )
@@ -56,6 +57,11 @@ func Load() (Config, error) {
 	if err := yaml.Unmarshal(data, &cfg); err != nil {
 		return Config{}, err
 	}
+
+	sort.SliceStable(cfg.Projects, func(i, j int) bool {
+		return cfg.Projects[i].Name < cfg.Projects[j].Name
+	})
+
 	return cfg, nil
 }
 
