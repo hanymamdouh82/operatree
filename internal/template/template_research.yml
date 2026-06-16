@@ -19,6 +19,7 @@ modules:
         name: tasks
         subDirs:
     subDirs:
+      - budgets
       - communications
       - planning
       - reports

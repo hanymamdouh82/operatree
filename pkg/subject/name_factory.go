@@ -26,6 +26,12 @@ func nameFactory(s Subject) string {
 	case SubjectTopic:
 		sn := metadata.FormatName(s.Name)
 		return sn
+	case SubjectObjective:
+		sn := metadata.FormatName(s.Name)
+		if s.Date != "" {
+			sn = fmt.Sprintf("%s-%s", s.Date, sn)
+		}
+		return sn
 	case SubjectDataSource:
 		sn := metadata.FormatName(s.Name)
 		return sn
