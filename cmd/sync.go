@@ -7,8 +7,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var confirmSync bool
+
 func init() {
 	syncCmd.Flags().StringVarP(&destDir, "dest", "d", actDir, dFlagHelp_project)
+	syncCmd.Flags().BoolVarP(&confirmSync, "yes", "y", false, "confirm and apply sync changes")
 	syncCmd.PreRun = resolveProjectDir
 	rootCmd.AddCommand(syncCmd)
 }
@@ -16,7 +19,7 @@ func init() {
 var syncCmd = &cobra.Command{
 	Use:   "sync",
 	Short: "Syncs project",
-	Long:  "Syncs project subjects with project metadata",
+	Long:  "Syncs project subjects with project metadata. Dry-run by default — use -y to apply.",
 	Args:  cobra.NoArgs,
 	Run:   sync,
 }
@@ -27,8 +30,10 @@ func sync(cmd *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
-	// Sync project metadata with subject metadata
-	if err := project.Sync(&p); err != nil {
+	result, err := project.Sync(&p, confirmSync)
+	if err != nil {
 		log.Fatal(err)
 	}
+
+	result.Print(confirmSync)
 }

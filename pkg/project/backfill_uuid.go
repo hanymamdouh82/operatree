@@ -37,7 +37,11 @@ func backfillModuleUUIDs(m *module.Module) (bool, error) {
 				dirty = true
 				continue // skip adding to valid slice
 			}
-			return false, err // real error, propagate
+			// malformed metadata — log and keep the existing entry rather than
+			// blocking the entire project load over one bad file
+			fmt.Printf("warning: subject '%s' has malformed metadata, skipping: %v\n", m.Subjects[i].Name, err)
+			valid = append(valid, m.Subjects[i])
+			continue
 		}
 
 		if onDisk.UUID == "" {

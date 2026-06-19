@@ -50,7 +50,7 @@ func editMetadata(cmd *cobra.Command, args []string) {
 	}
 
 	// Sync project metadata with subject metadata
-	if err := project.Sync(&p); err != nil {
+	if _, err := project.Sync(&p, true); err != nil {
 		log.Fatal(err)
 	}
 }
