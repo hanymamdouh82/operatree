@@ -2,6 +2,7 @@ package project
 
 import (
 	"fmt"
+	"log"
 	"path/filepath"
 	"slices"
 	"strings"
@@ -87,4 +88,19 @@ func (p *Project) Archive(s subject.Subject) error {
 func (p *Project) RenameSubject(st, term, newName string, uuid string) error {
 
 	return RenameSubject(p, st, term, newName, uuid)
+}
+
+// updates subject of type TASK status
+func (p *Project) EditTaskStatus(uuid, term, newStatus string) error {
+
+	if err := editTaskStatus(p, uuid, term, newStatus); err != nil {
+		return err
+	}
+
+	// Sync project metadata with subject metadata
+	if err := Sync(p); err != nil {
+		log.Fatal(err)
+	}
+
+	return nil
 }

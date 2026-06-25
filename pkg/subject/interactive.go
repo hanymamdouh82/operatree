@@ -69,7 +69,7 @@ func interactiveCLI(st SubjectType, s *Subject, ss []Subject) error {
 
 	// Task-specific fields
 	if st == SubjectTask && len(ss) > 0 {
-		var owner, status string
+		var owner string
 
 		// Build options for related events select
 		eventOptions := make([]huh.Option[string], len(ss))
@@ -91,8 +91,16 @@ func interactiveCLI(st SubjectType, s *Subject, ss []Subject) error {
 						huh.NewOption("Postponed", "postponed"),
 						huh.NewOption("Done", "done"),
 					).
-					Value(&status),
+					Value(&s.Status),
+			),
+		).Run()
+		if err != nil {
+			return err
+		}
+		s.Owner = metadata.ParsePersonName(owner)
 
+		err = huh.NewForm(
+			huh.NewGroup(
 				huh.NewMultiSelect[string]().
 					Title("Related Subject").
 					Options(eventOptions...).
@@ -103,9 +111,6 @@ func interactiveCLI(st SubjectType, s *Subject, ss []Subject) error {
 			return err
 		}
 
-		s.Owner = metadata.ParsePersonName(owner)
-		s.Status = status
-		// s.RelatedEvents = append(s.RelatedEvents, relatedEvent)
 	}
 
 	// Data-Source-specific fields

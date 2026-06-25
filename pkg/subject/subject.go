@@ -128,6 +128,15 @@ func (s *Subject) EditMetadata() error {
 	return nil
 }
 
+func (s *Subject) EditTaskStatus(newStatus string) error {
+
+	if err := EditStatus(s, newStatus); err != nil {
+		return err
+	}
+
+	return s.WriteMetadata()
+}
+
 func (s *Subject) Rename(newName string) (string, error) {
 	return renameSubject(s, newName)
 }
