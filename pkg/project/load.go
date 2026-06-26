@@ -25,6 +25,7 @@ func Load(pth string) (Project, error) {
 
 	// hydrate all internal absolute paths based on root from config loaded on user system
 	hydratePath(pth, &p)
+	hydrateFromDisk(&p)
 
 	// rebuild UUIDs and other important migrations
 	dirty, err := p.backfillUUIDs()
